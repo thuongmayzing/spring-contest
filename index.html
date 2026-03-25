@@ -70,6 +70,7 @@ button:hover {
 
 const apiUrl = "https://script.google.com/macros/s/AKfycbyNBdiXOEQeVtqHbvkQjyzjve0WyNYuk3ginIgIy_tEltkXbBQSn2mMgGqFA7ZdJuPqPQ/exec";
 
+<script>
 async function loadData() {
   const userId = document.getElementById("userIdInput").value.trim();
 
@@ -79,27 +80,30 @@ async function loadData() {
   }
 
   try {
-    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
+    const res = await fetch(
+      "https://script.google.com/macros/s/AKfycbxeJ2uEnKU2fZ10CKmCzvCsFdZCQYjkT4lizD7-1XXv-Vt189fDjOi47w3ucGwNQJY7pw/exec?id=" 
+      + encodeURIComponent(userId)
+    );
+
     const data = await res.json();
 
     if (data.error) {
-      alert("User not found");
+      alert(data.error);
       return;
     }
 
-    document.getElementById("result").style.display = "block";
     document.getElementById("result").innerHTML = `
-      <h3>📊 Your Result</h3>
+      <p><b>User ID:</b> ${data.userId}</p>
       <p><b>Units:</b> ${data.units}</p>
       <p><b>Points:</b> ${data.points}</p>
       <p><b>Rank:</b> #${data.rank}</p>
     `;
+
   } catch (err) {
+    alert("Error loading data");
     console.error(err);
-    alert("Error loading data. Check API or permissions.");
   }
 }
-
 </script>
 
 </body>
