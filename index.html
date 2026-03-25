@@ -1,72 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Contest</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Contest Widget</title>
 
 <style>
-body {
-  font-family: Arial;
-  text-align: center;
-  background: #f7f8fc;
-  margin: 0;
+body {margin:0; font-family: Gotham, Arial, sans-serif; background:#fff;}
+
+/* LOGIN */
+.login {text-align:center; margin:20px;}
+.login input{
+  padding:8px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  width:220px;
+}
+.login button{
+  padding:8px 14px;
+  margin-left:6px;
+  border:none;
+  border-radius:6px;
+  background:#1e2447;
+  color:white;
+  cursor:pointer;
 }
 
-.container {
-  margin-top: 80px;
+/* WIDGET */
+.top {
+  background:#1e2447;
+  color:white;
+  text-align:center;
+  padding:30px 20px;
+}
+.top h1 {margin:0; font-size:26px;}
+.top p {margin:4px 0; font-size:14px; opacity:0.9;}
+
+.divider {
+  border-top:1px solid #ccc;
+  margin:16px auto;
+  max-width:240px;
+  opacity:0.4;
 }
 
-input {
-  padding: 12px;
-  width: 240px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+.level-now {
+  font-size:20px;
+  font-weight:600;
+  margin-top:10px;
 }
 
-button {
-  padding: 12px 20px;
-  background: #1e2447;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
+.bottom {
+  background:#fff;
+  text-align:center;
+  padding:30px 20px;
 }
 
-button:hover {
-  opacity: 0.9;
+.circle {
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:#ffd166;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 16px;
+  font-size:20px;
+  font-weight:700;
 }
 
-.box {
-  margin-top: 30px;
-  padding: 20px;
-  background: white;
-  display: none;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  min-width: 250px;
+.banner {
+  background:#111;
+  color:#fff;
+  display:inline-block;
+  padding:6px 20px;
+  border-radius:20px;
+  font-size:14px;
+  margin-bottom:20px;
+}
+
+.progress-wrap {
+  max-width:360px;
+  margin:0 auto;
+}
+
+.progress-text {
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  margin-bottom:6px;
+  color:#555;
+}
+
+.progress-bar {
+  height:14px;
+  background:#eee;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.progress-fill {
+  height:100%;
+  background:linear-gradient(90deg,#ff6f61,#fcb045);
+  width:0%;
+}
+
+.email-display {
+  margin-top:12px;
+  font-size:13px;
+  color:#666;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- LOGIN -->
+<div class="login">
+  <input type="text" id="userIdInput" placeholder="Enter your User ID"/>
+  <button id="viewBtn">View my widget</button>
+</div>
 
-  <h2>🌸 Spring Contest</h2>
+<!-- WIDGET -->
+<div id="widget" style="display:none">
 
-  <input id="userIdInput" placeholder="Enter your User ID">
-  <br><br>
+  <div class="top">
+    <h1>Spring Contest</h1>
+    <p>Live Progress Tracking</p>
+    <div class="divider"></div>
+    <div class="level-now" id="currentLevel">LOADING...</div>
+  </div>
 
-  <button onclick="loadData()">Check</button>
+  <div class="bottom">
+    <div class="circle" id="rewardCircle">💰 $0</div>
 
-  <div id="result" class="box"></div>
+    <div class="banner" id="nextBanner">NEXT LEVEL</div>
+
+    <div class="progress-wrap">
+      <div class="progress-text">
+        <span id="progressText">0 / 0</span>
+        <span id="progressPercent">0%</span>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="email-display" id="emailDisplay"></div>
+  </div>
 
 </div>
 
 <script>
+document.getElementById("viewBtn").addEventListener("click", loadData);
+
 async function loadData() {
   const userId = document.getElementById("userIdInput").value.trim();
 
@@ -88,20 +175,44 @@ async function loadData() {
       return;
     }
 
-    const box = document.getElementById("result");
-    box.style.display = "block";
-
-    box.innerHTML = `
-      <p><b>User ID:</b> ${data.userId}</p>
-      <p><b>Units:</b> ${data.units}</p>
-      <p><b>Points:</b> ${data.points}</p>
-      <p><b>Rank:</b> #${data.rank}</p>
-    `;
+    render(data);
 
   } catch (err) {
     alert("Error loading data");
     console.error(err);
   }
+}
+
+function render(data) {
+  document.getElementById("widget").style.display = "block";
+
+  document.getElementById("emailDisplay").textContent =
+    "User ID: " + data.userId;
+
+  const points = data.points || 0;
+
+  // level logic (tùy bạn chỉnh)
+  let level = Math.floor(points / 500) + 1;
+  let nextLevelPoints = level * 500;
+
+  document.getElementById("currentLevel").textContent =
+    `YOU'RE ON LEVEL ${level}!`;
+
+  document.getElementById("rewardCircle").textContent =
+    "💰 $" + points;
+
+  document.getElementById("nextBanner").textContent =
+    `LEVEL ${level + 1}: ${nextLevelPoints.toLocaleString()} POINTS`;
+
+  const percent = Math.min(100, (points / nextLevelPoints) * 100).toFixed(0);
+
+  document.getElementById("progressText").textContent =
+    `${points.toLocaleString()} / ${nextLevelPoints.toLocaleString()}`;
+
+  document.getElementById("progressPercent").textContent =
+    percent + "%";
+
+  document.getElementById("progressFill").style.width = percent + "%";
 }
 </script>
 
