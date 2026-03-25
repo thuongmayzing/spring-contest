@@ -14,23 +14,55 @@ body {
   background-color: #f7f8fc;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px;
 }
 
 .container {
   max-width: 500px;
-  width: 90%;
+  width: 100%;
   background: white;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+/* LEADERBOARD */
+.leaderboard {
+  width: 260px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.leaderboard h3 {
+  margin: 0 0 12px;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none;
+}
+
+.me {
+  font-weight: 700;
+  color: #1e2447;
+}
+
+/* INPUT */
 .email-box {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   height: 100vh;
   gap: 12px;
@@ -53,6 +85,7 @@ body {
   cursor: pointer;
 }
 
+/* HEADER */
 .header {
   background: #1e2447;
   color: white;
@@ -63,7 +96,6 @@ body {
 .header h1 {
   margin: 0;
   font-size: 28px;
-  font-weight: 700;
 }
 
 .header p {
@@ -82,9 +114,9 @@ body {
 .level {
   font-size: 24px;
   font-weight: 700;
-  margin-top: 6px;
 }
 
+/* CONTENT */
 .content {
   text-align: center;
   padding: 30px 20px;
@@ -100,21 +132,11 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  line-height: 1.15;
-}
-
-.circle div:first-child {
-  font-size: 14px;
 }
 
 .circle .units {
   font-size: 24px;
   font-weight: 700;
-  margin: 6px 0;
-}
-
-.circle .reward {
-  font-size: 15px;
 }
 
 .stats {
@@ -122,13 +144,6 @@ body {
   justify-content: space-between;
   width: 90%;
   margin: 0 auto 12px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.stats div {
-  flex: 1;
-  text-align: center;
 }
 
 .progress-container {
@@ -169,10 +184,18 @@ body {
 }
 
 #widget { display: none; }
+
+/* responsive */
+@media (max-width: 768px) {
+  .leaderboard {
+    width: 100%;
+  }
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
 <div class="email-box" id="email-box">
@@ -217,8 +240,21 @@ body {
 </div>
 </div>
 
+<!-- LEADERBOARD -->
+<div class="leaderboard">
+  <h3>🏆 Top Sellers</h3>
+  <div id="leaderboard-list">Loading...</div>
+</div>
+
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbwmiZs7WjWNinxat4uLDpXDYpL4-BLvkJ7ozYFqoBjWM26Q2vMhTWBNP36aOpvzJizNlw/exec";
+const apiUrl = "YOUR_APPS_SCRIPT_URL";
+
+// mask email
+function maskEmail(email) {
+  if (!email) return "";
+  const [name, domain] = email.split("@");
+  return name.slice(0,2) + "***@" + domain;
+}
 
 async function loadWidget() {
   const userId = document.getElementById("userIdInput").value.trim();
@@ -227,40 +263,15 @@ async function loadWidget() {
   document.getElementById("email-box").style.display = "none";
   document.getElementById("widget").style.display = "block";
 
-  const cacheKey = "user_" + userId;
+  const res = await fetch(apiUrl + "?id=" + userId);
+  const data = await res.json();
 
-  // ⚡ LOAD CACHE NGAY
-  const cached = localStorage.getItem(cacheKey);
-  if (cached) {
-    renderData(JSON.parse(cached));
-  }
-
-  try {
-    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
-    const data = await res.json();
-
-    if (data.error) {
-      alert("User not found");
-      location.reload();
-      return;
-    }
-
-    // lưu cache
-    localStorage.setItem(cacheKey, JSON.stringify(data));
-
-    renderData(data);
-
-  } catch (err) {
-    console.error(err);
-  }
+  renderData(data);
 }
 
 function renderData(data) {
-  const units = +data.units || 0;
-  const points = +data.points || 0;
-  const rank = +data.rank || 0;
 
-  document.getElementById("user-email").textContent = data.email || "";
+  document.getElementById("user-email").textContent = data.email;
 
   const levels = [
     { points: 1000, reward: "$200" },
@@ -271,6 +282,8 @@ function renderData(data) {
     { points: 50000, reward: "$25,000" },
     { points: 150000, reward: "$100,000" }
   ];
+
+  const points = data.points;
 
   let currentLevel = 0;
   for (let i = 0; i < levels.length; i++) {
@@ -286,24 +299,24 @@ function renderData(data) {
   document.querySelector(".reward").textContent = nextLevel.reward;
 
   document.querySelector(".stats").innerHTML = `
-    <div>Units: ${units}</div>
-    <div>Points: ${points}</div>
-    <div>Rank: ${rank}</div>
+    <div>Units: ${data.units}</div>
+    <div>Points: ${data.points}</div>
+    <div>Rank: ${data.rank}</div>
   `;
 
-  const prev = currentLevel === 0 ? 0 : levels[currentLevel - 1].points;
-  const progress = ((points - prev) / (nextLevel.points - prev)) * 100;
-  const safe = Math.max(0, Math.min(100, progress));
-
-  const bar = document.getElementById("progress-bar");
-  bar.style.width = safe + "%";
-  bar.textContent = Math.floor(safe) + "%";
-
-  document.getElementById("progress-text").textContent =
-    `${points} / ${nextLevel.points}`;
+  // leaderboard
+  if (data.leaderboard) {
+    document.getElementById("leaderboard-list").innerHTML =
+      data.leaderboard.map(u => `
+        <div class="leaderboard-item ${u.userId === data.userId ? 'me' : ''}">
+          <span>#${u.rank} ${maskEmail(u.email)}</span>
+          <span>${u.points}</span>
+        </div>
+      `).join("");
+  }
 }
 
-// TIMER
+// timer
 function updateTimer() {
   const end = new Date("2026-06-24T23:59:59Z");
   const now = new Date();
