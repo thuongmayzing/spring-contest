@@ -1,75 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Contest</title>
-
-<style>
-body {
-  font-family: Arial;
-  text-align: center;
-  background: #f7f8fc;
-  margin: 0;
-}
-
-.container {
-  margin-top: 80px;
-}
-
-input {
-  padding: 12px;
-  width: 240px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-button {
-  padding: 12px 20px;
-  background: #1e2447;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-.box {
-  margin-top: 30px;
-  padding: 20px;
-  background: white;
-  display: inline-block;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  min-width: 250px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <h2>🌸 Spring Contest</h2>
-
-  <input id="userIdInput" placeholder="Enter your User ID">
-  <br><br>
-
-  <button onclick="alert('clicked')">Check</button>
-
-  <div id="result" class="box" style="display:none;"></div>
-
-</div>
-
-<script>
-
-const apiUrl = "https://script.google.com/macros/s/AKfycbyNBdiXOEQeVtqHbvkQjyzjve0WyNYuk3ginIgIy_tEltkXbBQSn2mMgGqFA7ZdJuPqPQ/exec";
-
 <script>
 async function loadData() {
   const userId = document.getElementById("userIdInput").value.trim();
@@ -92,7 +20,10 @@ async function loadData() {
       return;
     }
 
-    document.getElementById("result").innerHTML = `
+    const box = document.getElementById("result");
+    box.style.display = "block";
+
+    box.innerHTML = `
       <p><b>User ID:</b> ${data.userId}</p>
       <p><b>Units:</b> ${data.units}</p>
       <p><b>Points:</b> ${data.points}</p>
@@ -105,6 +36,3 @@ async function loadData() {
   }
 }
 </script>
-
-</body>
-</html>
