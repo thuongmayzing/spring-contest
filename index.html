@@ -3,21 +3,26 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Contest Widget</title>
+<title>Contest</title>
 
 <style>
 body {margin:0; font-family: Gotham, Arial, sans-serif; background:#fff;}
 
-/* LOGIN */
-.login {text-align:center; margin:20px;}
+/* PAGE 1 - LOGIN */
+.login {
+  text-align:center;
+  margin-top:120px;
+}
+
 .login input{
-  padding:8px;
+  padding:10px;
   border:1px solid #ccc;
   border-radius:6px;
-  width:220px;
+  width:240px;
 }
+
 .login button{
-  padding:8px 14px;
+  padding:10px 16px;
   margin-left:6px;
   border:none;
   border-radius:6px;
@@ -26,13 +31,14 @@ body {margin:0; font-family: Gotham, Arial, sans-serif; background:#fff;}
   cursor:pointer;
 }
 
-/* WIDGET */
+/* PAGE 2 - WIDGET */
 .top {
   background:#1e2447;
   color:white;
   text-align:center;
   padding:30px 20px;
 }
+
 .top h1 {margin:0; font-size:26px;}
 .top p {margin:4px 0; font-size:14px; opacity:0.9;}
 
@@ -114,31 +120,30 @@ body {margin:0; font-family: Gotham, Arial, sans-serif; background:#fff;}
 
 <body>
 
-<!-- LOGIN -->
-<div class="login">
-  <input type="text" id="userIdInput" placeholder="Enter your User ID"/>
-  <button id="viewBtn">View my widget</button>
+<!-- PAGE 1 -->
+<div id="page1" class="login">
+  <input type="text" id="userIdInput" placeholder="Enter your ID"/>
+  <button onclick="loadData()">View</button>
 </div>
 
-<!-- WIDGET -->
-<div id="widget" style="display:none">
+<!-- PAGE 2 -->
+<div id="page2" style="display:none">
 
   <div class="top">
-    <h1>Spring Contest</h1>
-    <p>Live Progress Tracking</p>
+    <h1>Christmas Contest</h1>
+    <p>20 Sep to 31 Dec (23:59 GMT)</p>
     <div class="divider"></div>
-    <div class="level-now" id="currentLevel">LOADING...</div>
+    <div class="level-now" id="currentLevel"></div>
   </div>
 
   <div class="bottom">
-    <div class="circle" id="rewardCircle">💰 $0</div>
-
-    <div class="banner" id="nextBanner">NEXT LEVEL</div>
+    <div class="circle" id="rewardCircle"></div>
+    <div class="banner" id="nextBanner"></div>
 
     <div class="progress-wrap">
       <div class="progress-text">
-        <span id="progressText">0 / 0</span>
-        <span id="progressPercent">0%</span>
+        <span id="progressText"></span>
+        <span id="progressPercent"></span>
       </div>
 
       <div class="progress-bar">
@@ -152,19 +157,18 @@ body {margin:0; font-family: Gotham, Arial, sans-serif; background:#fff;}
 </div>
 
 <script>
-document.getElementById("viewBtn").addEventListener("click", loadData);
 
 async function loadData() {
   const userId = document.getElementById("userIdInput").value.trim();
 
   if (!userId) {
-    alert("Please enter User ID");
+    alert("Please enter ID");
     return;
   }
 
   try {
     const res = await fetch(
-      "https://script.google.com/macros/s/AKfycbwQnBwgravJEERSGbZk1-YajdXWotR6xB58yV3UgEB6Bedeftp2WEeF39Q2uicsCfc/exec?id=" 
+      "https://script.google.com/macros/s/AKfycbwQnBwgravJEERSGbZk1-YajdXWotR6xB58yV3UgEB6Bedeftp2WEeF39Q2uicsCfc/exec?id="
       + encodeURIComponent(userId)
     );
 
@@ -175,6 +179,10 @@ async function loadData() {
       return;
     }
 
+    // chuyển sang trang 2
+    document.getElementById("page1").style.display = "none";
+    document.getElementById("page2").style.display = "block";
+
     render(data);
 
   } catch (err) {
@@ -184,36 +192,58 @@ async function loadData() {
 }
 
 function render(data) {
-  document.getElementById("widget").style.display = "block";
-
-  document.getElementById("emailDisplay").textContent =
-    "User ID: " + data.userId;
 
   const points = data.points || 0;
 
-  // level logic (tùy bạn chỉnh)
-  let level = Math.floor(points / 500) + 1;
-  let nextLevelPoints = level * 500;
+  let milestones = [
+    {points:250, reward:"$50"},
+    {points:500, reward:"$100"},
+    {points:1500, reward:"$500"},
+    {points:2500, reward:"$750"},
+    {points:5000, reward:"$2000"},
+    {points:10000, reward:"$5000"},
+    {points:25000, reward:"$12500"},
+    {points:50000, reward:"$25000"},
+    {points:100000, reward:"$75000"},
+    {points:125000, reward:"$100000"}
+  ];
+
+  let currentLevel = 0;
+  let next = milestones[0];
+
+  for (let i = 0; i < milestones.length; i++) {
+    if (points >= milestones[i].points) {
+      currentLevel = i + 1;
+    } else {
+      next = milestones[i];
+      break;
+    }
+  }
 
   document.getElementById("currentLevel").textContent =
-    `YOU'RE ON LEVEL ${level}!`;
+    `YOU'RE ON LEVEL ${currentLevel}!`;
 
   document.getElementById("rewardCircle").textContent =
-    "💰 $" + points;
+    "💰 " + next.reward;
 
   document.getElementById("nextBanner").textContent =
-    `LEVEL ${level + 1}: ${nextLevelPoints.toLocaleString()} POINTS`;
+    `LEVEL ${currentLevel + 1}: ${next.points.toLocaleString()} POINTS`;
 
-  const percent = Math.min(100, (points / nextLevelPoints) * 100).toFixed(0);
+  const percent = Math.min(100, (points / next.points) * 100).toFixed(0);
 
   document.getElementById("progressText").textContent =
-    `${points.toLocaleString()} / ${nextLevelPoints.toLocaleString()}`;
+    `${points.toLocaleString()} / ${next.points.toLocaleString()}`;
 
   document.getElementById("progressPercent").textContent =
     percent + "%";
 
-  document.getElementById("progressFill").style.width = percent + "%";
+  document.getElementById("progressFill").style.width =
+    percent + "%";
+
+  document.getElementById("emailDisplay").textContent =
+    "User ID: " + data.userId;
 }
+
 </script>
 
 </body>
