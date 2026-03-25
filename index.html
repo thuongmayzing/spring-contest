@@ -68,20 +68,21 @@ body {
   font-weight: 700;
 }
 
+/* tăng spacing */
 .header p {
-  margin: 3px 0 6px;
+  margin: 6px 0 10px;
   font-size: 14px;
 }
 
-/* GẠCH NGANG MỜ + NGẮN */
+/* gạch ngang đúng độ dài dòng date */
 .header hr {
-  width: 65%;
+  width: 260px;
+  max-width: 70%;
   border: none;
   border-top: 1px solid rgba(255,255,255,0.25);
-  margin: 8px auto;
+  margin: 6px auto;
 }
 
-/* LEVEL NHỎ HƠN TITLE */
 .level {
   font-size: 24px;
   font-weight: 700;
@@ -105,14 +106,15 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
+/* fix text bình thường lại + to hơn */
 .circle div:first-child {
-  font-size: 12px;
+  font-size: 14px;
+  opacity: 1;
 }
 
-/* POINTS = SIZE LEVEL */
 .circle .units {
   font-size: 24px;
   font-weight: 700;
@@ -120,7 +122,8 @@ body {
 }
 
 .circle .reward {
-  font-size: 14px;
+  font-size: 15px;
+  opacity: 1;
 }
 
 /* STATS */
@@ -145,6 +148,7 @@ body {
   background: #e0e0e0;
   border-radius: 20px;
   height: 26px;
+  overflow: hidden;
 }
 
 .progress-bar {
@@ -156,6 +160,7 @@ body {
   align-items: center;
   justify-content: flex-end;
   padding-right: 10px;
+  border-radius: 20px; /* FIX bo góc */
 }
 
 .footer-info {
