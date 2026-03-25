@@ -10,29 +10,43 @@ body {
   font-family: Arial;
   text-align: center;
   background: #f7f8fc;
+  margin: 0;
 }
 
 .container {
-  margin-top: 50px;
+  margin-top: 80px;
 }
 
 input {
-  padding: 10px;
-  width: 200px;
+  padding: 12px;
+  width: 240px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
 }
 
 button {
-  padding: 10px;
+  padding: 12px 20px;
   background: #1e2447;
   color: white;
   border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  opacity: 0.9;
 }
 
 .box {
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 20px;
   background: white;
   display: inline-block;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  min-width: 250px;
 }
 </style>
 </head>
@@ -41,9 +55,11 @@ button {
 
 <div class="container">
 
-  <h2>Spring Contest</h2>
+  <h2>🌸 Spring Contest</h2>
 
   <input id="userIdInput" placeholder="Enter your User ID">
+  <br><br>
+
   <button onclick="loadData()">Check</button>
 
   <div id="result" class="box" style="display:none;"></div>
@@ -57,20 +73,31 @@ const apiUrl = "https://script.google.com/macros/s/AKfycbxeJ2uEnKU2fZ10CKmCzvCsF
 async function loadData() {
   const userId = document.getElementById("userIdInput").value.trim();
 
-  const res = await fetch(apiUrl + "?id=" + userId);
-  const data = await res.json();
-
-  if (data.error) {
-    alert("User not found");
+  if (!userId) {
+    alert("Please enter User ID");
     return;
   }
 
-  document.getElementById("result").style.display = "block";
-  document.getElementById("result").innerHTML = `
-    <p><b>Units:</b> ${data.units}</p>
-    <p><b>Points:</b> ${data.points}</p>
-    <p><b>Rank:</b> #${data.rank}</p>
-  `;
+  try {
+    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
+    const data = await res.json();
+
+    if (data.error) {
+      alert("User not found");
+      return;
+    }
+
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").innerHTML = `
+      <h3>📊 Your Result</h3>
+      <p><b>Units:</b> ${data.units}</p>
+      <p><b>Points:</b> ${data.points}</p>
+      <p><b>Rank:</b> #${data.rank}</p>
+    `;
+  } catch (err) {
+    console.error(err);
+    alert("Error loading data. Check API or permissions.");
+  }
 }
 
 </script>
