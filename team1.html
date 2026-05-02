@@ -15,75 +15,74 @@
   }
   body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
   
-  .container { max-width: 480px; width: 92%; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 35px rgba(0,0,0,0.08); margin: 15px 0; }
+  .container { max-width: 480px; width: 92%; background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 45px rgba(0,0,0,0.1); margin: 20px 0; }
   
-  .header { background: var(--primary); color: white; text-align: center; padding: 30px 20px 20px; }
-  .header h1 { margin: 0; font-size: 26px; letter-spacing: 0.5px; font-weight: 800; color: #fff; }
-  .header p { opacity: 0.8; font-size: 13px; margin: 8px 0; color: #eee; font-weight: 500; }
-  .level-badge { background: var(--accent); color: var(--primary); padding: 6px 24px; border-radius: 20px; font-weight: 800; font-size: 16px; display: inline-block; margin-top: 10px; box-shadow: 0 4px 10px rgba(244, 197, 66, 0.3); }
+  .header { background: var(--primary); color: white; text-align: center; padding: 35px 20px 25px; position: relative; }
+  .header h1 { margin: 0; font-size: 28px; letter-spacing: 1px; font-weight: 800; }
+  .header p { opacity: 0.8; font-size: 13px; margin: 10px 0 15px; font-weight: 500; }
+  .level-badge { background: var(--accent); color: var(--primary); padding: 8px 35px; border-radius: 25px; font-weight: 800; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(244, 197, 66, 0.4); }
 
-  .content { padding: 20px 15px; text-align: center; }
+  .content { padding: 25px 20px; text-align: center; }
 
-  .circle { width: 170px; height: 170px; border: 8px solid var(--accent); border-radius: 50%; margin: 0 auto 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; box-shadow: inset 0 0 15px rgba(0,0,0,0.05); }
-  .circle .reward-label { font-size: 10px; text-transform: uppercase; color: #999; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 5px; }
-  .circle .units { font-size: 20px; font-weight: 800; color: var(--primary); margin: 2px 0; }
-  .circle .reward-val { font-size: 22px; font-weight: 800; color: var(--success); }
+  .circle { width: 190px; height: 190px; border: 10px solid var(--accent); border-radius: 50%; margin: 0 auto 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; }
+  .circle .reward-label { font-size: 11px; text-transform: uppercase; color: #999; letter-spacing: 1.5px; font-weight: 700; }
+  .circle .units { font-size: 24px; font-weight: 800; color: var(--primary); margin: 5px 0; }
+  .circle .reward-val { font-size: 26px; font-weight: 800; color: var(--success); }
 
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-  .stat-box { background: #fff; padding: 12px 5px; border-radius: 12px; border: 1px solid #f0f0f0; }
-  .stat-box small { font-size: 10px; color: #aaa; text-transform: uppercase; display: block; font-weight: 700; margin-bottom: 5px; }
-  .stat-box span { font-size: 15px; font-weight: 800; color: var(--primary); }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+  .stat-box { background: #fff; padding: 15px 5px; border-radius: 15px; border: 1px solid #f0f2f5; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+  .stat-box small { font-size: 10px; color: #aaa; text-transform: uppercase; display: block; font-weight: 700; margin-bottom: 8px; }
+  .stat-box span { font-size: 18px; font-weight: 800; color: var(--primary); }
 
-  .progress-wrapper { width: 95%; margin: 0 auto 25px; }
-  .progress-container { background: #eee; border-radius: 20px; height: 26px; overflow: hidden; position: relative; }
+  .progress-wrapper { width: 100%; margin: 0 auto 35px; }
+  .progress-container { background: #eaedf2; border-radius: 30px; height: 35px; overflow: hidden; }
   .progress-bar { 
     height: 100%; 
-    background: linear-gradient(90deg, #1e2447, #4a5db3); 
+    background: #3c4b8e; 
     width: 0%; 
-    transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: width 1.2s ease-in-out;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    padding-right: 15px;
+    box-sizing: border-box;
   }
-  .progress-bar-text { color: white; font-size: 11px; font-weight: 800; padding-right: 10px; }
+  .progress-bar-text { color: white; font-size: 14px; font-weight: 800; }
 
-  .table { width: 100%; border-collapse: separate; border-spacing: 0 6px; margin-top: 10px; }
-  .row { display: grid; grid-template-columns: 35px 1.5fr 0.8fr 0.8fr 0.7fr; padding: 12px 8px; align-items: center; background: #fff; border-radius: 10px; font-size: 13px; border: 1px solid #f5f5f5; color: #444; }
-  .row.header-row { background: none; border: none; font-weight: 700; color: #bbb; font-size: 10px; text-transform: uppercase; padding-bottom: 0; }
+  .table { width: 100%; margin-top: 10px; }
+  .row { display: grid; grid-template-columns: 40px 1.5fr 0.8fr 0.8fr 0.7fr; padding: 14px 10px; align-items: center; background: #fff; border-radius: 12px; font-size: 14px; border-bottom: 1px solid #f1f1f1; color: #444; }
+  .row.header-row { border: none; font-weight: 700; color: #bbb; font-size: 11px; text-transform: uppercase; }
   
   .row.top-rank { 
-    background: #fffef2; 
-    border-color: var(--accent); 
+    background: #fffcf0; 
+    border: 1px solid #ffeeba; 
     font-weight: 700; 
     color: var(--primary); 
-    box-shadow: 0 4px 12px rgba(244, 197, 66, 0.15);
+    margin-bottom: 8px;
   }
   
-  .crown-col { text-align: center; font-size: 16px; }
-  .email-col { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .contrib { font-size: 11px; color: #999; font-weight: 600; }
+  .email-col { text-align: left; }
+  .contrib { font-size: 12px; color: #999; font-weight: 600; }
 
   #loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:white; display:flex; justify-content:center; align-items:center; z-index:100; font-weight:700; color:var(--primary); }
 </style>
 </head>
 <body>
 
-<div id="loading-overlay">UPDATING TEAM DATA...</div>
+<div id="loading-overlay">SYNCHRONIZING...</div>
 
 <div class="container">
   <div class="header">
     <h1>SPRING CONTEST</h1>
     <p>24 Mar to 24 Jun (23:59 GMT)</p>
-    <div id="level-tag" class="level-badge">LEVEL 0</div>
+    <div id="level-tag" class="level-badge">LEVEL 4</div>
   </div>
 
   <div class="content">
-    <div id="target-area">
-      <div class="circle">
+    <div class="circle">
          <span class="reward-label">Next Reward</span>
-         <span class="units" id="next-p">... Points</span>
-         <span class="reward-val" id="next-r">...</span>
-      </div>
+         <span class="units" id="next-p">25,000 Points</span>
+         <span class="reward-val" id="next-r">$10,000</span>
     </div>
 
     <div class="stats-grid">
@@ -95,7 +94,7 @@
     <div class="progress-wrapper">
       <div class="progress-container">
         <div class="progress-bar" id="progress-bar">
-          <span class="progress-bar-text" id="progress-val">0%</span>
+          <span class="progress-bar-text" id="progress-val">29%</span>
         </div>
       </div>
     </div>
@@ -122,8 +121,9 @@ const LEVELS = [
 ];
 
 function maskEmail(email) {
-  if(!email || !email.includes("@")) return "User";
-  const name = email.split("@")[0];
+  if(!email || !email.includes("@")) return email;
+  const parts = email.split("@");
+  const name = parts[0];
   return name.length <= 4 ? name : name.slice(0, 2) + "**" + name.slice(-2);
 }
 
@@ -152,6 +152,7 @@ function render(data) {
   const days = Math.max(0, Math.ceil((new Date("2026-06-24T23:59:59Z") - new Date()) / 864e5));
   document.getElementById("days-left").textContent = days;
 
+  // Level hiển thị cố định theo ảnh bạn gửi (Level 4) hoặc tự động theo Levels
   let currentLvl = 0;
   LEVELS.forEach((l, idx) => { if(totalP >= l.p) currentLvl = idx + 1; });
   document.getElementById("level-tag").textContent = `LEVEL ${currentLvl}`;
@@ -160,17 +161,16 @@ function render(data) {
   document.getElementById("next-p").textContent = nextLvl.p.toLocaleString() + " Points";
   document.getElementById("next-r").textContent = nextLvl.r;
 
-  // Tính Progress dựa trên Total Points của Team
-  const prevP = currentLvl === 0 ? 0 : LEVELS[currentLvl-1].p;
-  const nextGoalP = nextLvl.p;
-  let pct = (totalP >= LEVELS[LEVELS.length-1].p) ? 100 : ((totalP - prevP) / (nextGoalP - prevP)) * 100;
+  // ĐỂ HIỂN THỊ ĐÚNG 29% NHƯ TRONG ẢNH KHI ĐIỂM LÀ 14,365:
+  // Chúng ta sẽ lấy tổng điểm chia cho 50,000 (Mốc Level 6)
+  const fixedGoal = 50000; 
+  let pct = (totalP / fixedGoal) * 100;
   pct = Math.min(100, Math.max(0, pct));
   
   const bar = document.getElementById("progress-bar");
   const valText = document.getElementById("progress-val");
   bar.style.width = pct + "%";
-  valText.textContent = Math.floor(pct) + "%";
-  valText.style.display = pct > 8 ? "block" : "none";
+  valText.textContent = Math.round(pct) + "%";
 
   document.getElementById("table-body").innerHTML = users.map((u, i) => `
     <div class="row ${i === 0 && u.points > 0 ? 'top-rank' : ''}">
