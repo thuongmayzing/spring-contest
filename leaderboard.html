@@ -10,23 +10,32 @@
   :root { --primary: #1e2447; --accent: #f4c542; --bg: #f7f8fc; --text-muted: #999; }
   body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
   .container { max-width: 480px; width: 92%; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); margin: 20px 0; }
+  
+  /* LOGIN BOX */
   .login-box { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 20px; gap: 15px; text-align: center; }
   .login-box h2 { color: var(--primary); margin: 0 0 10px; font-weight: 800; font-size: 26px; text-transform: uppercase; letter-spacing: 1px; }
   .login-box input { padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 85%; font-family: inherit; font-size: 15px; outline: none; }
   .login-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 15px 30px; font-weight: 700; cursor: pointer; width: 92%; font-size: 16px; transition: 0.3s; }
+  .login-box button:hover { background: #2a3363; transform: translateY(-2px); }
+
+  /* HEADER */
   .header { background: var(--primary); color: white; text-align: center; padding: 45px 20px 35px; }
   .header .contest-name { font-size: 14px; font-weight: 600; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
   .header h1 { margin: 0; font-size: 32px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: #fff; }
+
+  /* CONTENT & TABLE */
   .content { padding: 30px 12px; }
   .table-header { display: grid; grid-template-columns: 45px 1.2fr 60px 80px; padding: 0 15px 12px; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
   .list-container { display: flex; flex-direction: column; gap: 10px; }
   .row { display: grid; grid-template-columns: 45px 1.2fr 60px 80px; padding: 18px 15px; align-items: center; background: #fff; border-radius: 16px; font-size: 13px; border: 1px solid #f2f2f2; color: #444; }
-  .row.top1 { background: #fffdf2; border-color: var(--accent); font-weight: 700; }
+  .row.top1 { background: #fffdf2; border-color: var(--accent); font-weight: 700; box-shadow: 0 4px 15px rgba(244, 197, 66, 0.12); }
   .row.me { background: #eff2ff; border-color: #3d4da0; border-style: dashed; font-weight: 800; }
+
   .rank-col { font-weight: 800; text-align: center; }
   .name-col { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
   .level-col { text-align: center; font-weight: 700; color: #2ecc71; font-size: 12px; }
   .points-col { font-weight: 700; text-align: right; color: var(--primary); font-size: 14px; }
+
   #list-wrapper { display: none; width: 100%; }
   .loading { text-align: center; padding: 40px; color: var(--text-muted); font-weight: 600; }
 </style>
@@ -34,6 +43,7 @@
 <body>
 
 <div class="container">
+  <!-- Màn hình đăng nhập -->
   <div class="login-box" id="login">
     <span style="font-size: 40px; margin-bottom: 10px;">🏆</span>
     <h2>Leaderboard</h2>
@@ -41,6 +51,7 @@
     <button onclick="start()">View Rankings</button>
   </div>
 
+  <!-- Màn hình bảng xếp hạng -->
   <div id="list-wrapper">
     <div class="header">
       <span class="contest-name">Spring Contest</span>
@@ -63,7 +74,7 @@
 <script>
 const apiUrl = "https://script.google.com/macros/s/AKfycbzAxLNImv5gHZEDrH5uMo-p7doRlJrmee3dfT-bBP_6K3w8N4zRAF-GyI-OsE17ST1pKA/exec";
 
-// DANH SÁCH USER ĐƯỢC PHÉP TRUY CẬP (Thay thế bằng list của bạn)
+// DANH SÁCH USER ĐƯỢC PHÉP TRUY CẬP (Đã dọn dẹp ký tự ẩn)
 const ALLOWED_USERS = [
   "org_uvtyyEeLT59VRIfm",
   "google-oauth2|101506502897481310694",
@@ -73,7 +84,6 @@ const ALLOWED_USERS = [
 ];
 
 let currentUserId = "";
-
 const LEVELS = [{ points: 1000 }, { points: 2000 }, { points: 5000 }, { points: 10000 }, { points: 25000 }, { points: 50000 }, { points: 150000 }];
 
 function maskEmail(email){
@@ -89,21 +99,24 @@ function getLevel(points) {
 }
 
 function start(){
-  const userId = document.getElementById("userIdInput").value.trim();
-  if(!userId) return alert("Please enter your ID");
+  const inputVal = document.getElementById("userIdInput").value.trim();
+  if(!inputVal) return alert("Please enter your ID");
 
-  // KIỂM TRA QUYỀN TRUY CẬP TRƯỚC KHI GỌI API
-  if (!ALLOWED_USERS.includes(userId)) {
+  // Kiểm tra quyền truy cập (Không phân biệt hoa thường và xóa khoảng trắng thừa)
+  const isAllowed = ALLOWED_USERS.some(u => u.toLowerCase() === inputVal.toLowerCase());
+
+  if (!isAllowed) {
     return alert("Access Denied: Your ID is not on the authorized list.");
   }
 
-  currentUserId = userId;
+  currentUserId = inputVal;
   document.getElementById("login").style.display = "none";
   document.getElementById("list-wrapper").style.display = "block";
   loadLeaderboard();
 }
 
 function loadLeaderboard(){
+  // Sử dụng ID gốc để gọi API (action=leaderboard để lấy full list)
   const url = `${apiUrl}?id=${encodeURIComponent(currentUserId)}&action=leaderboard&callback=handleData`;
   const script = document.createElement("script");
   script.src = url;
@@ -127,10 +140,12 @@ function renderLeaderboard(data){
     return;
   }
 
+  // Sắp xếp giảm dần theo điểm
   leaderboard.sort((a, b) => (b.points || 0) - (a.points || 0));
 
   let html = leaderboard.map((u, index) => {
     const rank = u.rank || (index + 1);
+    // Kiểm tra xem có phải là user hiện tại không
     const isMe = (u.userId === currentUserId || u.id === currentUserId || u.email === currentUserId);
     const pts = u.points || 0;
     
