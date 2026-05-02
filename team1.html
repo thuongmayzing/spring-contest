@@ -2,172 +2,225 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Contest 2026 - Team 1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Individual Progress - Spring Contest 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-  :root {
-    --primary: #1e2447;
-    --accent: #f4c542;
-    --bg: #f7f8fc;
-    --success: #2ecc71;
+  :root { --primary: #1e2447; --accent: #f4c542; --bg: #f7f8fc; --success: #2ecc71; }
+  
+  /* Reset & Fit Screen */
+  * { box-sizing: border-box; }
+  body { 
+    font-family: 'Montserrat', sans-serif; 
+    margin: 0; 
+    background: var(--bg); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; /* Cố định chiều cao màn hình */
+    overflow: hidden; /* Không cho scroll */
   }
-  body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-  
-  .container { max-width: 480px; width: 92%; background: white; border-radius: 30px; overflow: hidden; box-shadow: 0 15px 45px rgba(0,0,0,0.1); margin: 20px 0; }
-  
-  .header { background: var(--primary); color: white; text-align: center; padding: 35px 20px 25px; position: relative; }
-  .header h1 { margin: 0; font-size: 28px; letter-spacing: 1px; font-weight: 800; }
-  .header p { opacity: 0.8; font-size: 13px; margin: 10px 0 15px; font-weight: 500; }
-  .level-badge { background: var(--accent); color: var(--primary); padding: 8px 35px; border-radius: 25px; font-weight: 800; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(244, 197, 66, 0.4); }
 
-  .content { padding: 25px 20px; text-align: center; }
-
-  .circle { width: 190px; height: 190px; border: 10px solid var(--accent); border-radius: 50%; margin: 0 auto 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; }
-  .circle .reward-label { font-size: 11px; text-transform: uppercase; color: #999; letter-spacing: 1.5px; font-weight: 700; }
-  .circle .units { font-size: 24px; font-weight: 800; color: var(--primary); margin: 5px 0; }
-  .circle .reward-val { font-size: 26px; font-weight: 800; color: var(--success); }
-
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 30px; }
-  .stat-box { background: #fff; padding: 15px 5px; border-radius: 15px; border: 1px solid #f0f2f5; }
-  .stat-box small { font-size: 10px; color: #aaa; text-transform: uppercase; display: block; font-weight: 700; margin-bottom: 8px; }
-  .stat-box span { font-size: 18px; font-weight: 800; color: var(--primary); }
-
-  .progress-wrapper { width: 100%; margin: 0 auto 35px; }
-  .progress-container { background: #eaedf2; border-radius: 30px; height: 35px; overflow: hidden; }
-  .progress-bar { 
-    height: 100%; 
-    background: #3c4b8e; 
-    width: 0%; 
-    transition: width 1.2s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 15px;
-    box-sizing: border-box;
+  .container { 
+    width: 100%; 
+    max-width: 400px; 
+    height: 95vh; /* Fit vừa chiều dọc */
+    background: white; 
+    border-radius: 24px; 
+    display: flex; 
+    flex-direction: column; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    position: relative;
   }
-  .progress-bar-text { color: white; font-size: 14px; font-weight: 800; }
 
-  .table { width: 100%; }
-  .row { display: grid; grid-template-columns: 40px 1.5fr 0.8fr 0.8fr 0.7fr; padding: 14px 10px; align-items: center; background: #fff; border-radius: 12px; font-size: 14px; border-bottom: 1px solid #f1f1f1; color: #444; }
-  .row.header-row { border: none; font-weight: 700; color: #bbb; font-size: 11px; text-transform: uppercase; }
+  /* Form nhập ID */
+  .email-box { 
+    flex: 1;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+    gap: 15px; 
+  }
+  .email-box input { padding: 15px; border-radius: 12px; border: 1.5px solid #eee; width: 90%; font-size: 16px; outline: none; font-family: inherit; transition: 0.3s; }
+  .email-box input:focus { border-color: var(--primary); }
+  .email-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 700; cursor: pointer; width: 90%; font-family: inherit; font-size: 16px; }
+
+  /* Widget Content */
+  #widget { display: none; height: 100%; display: none; flex-direction: column; }
   
-  .row.top-rank { background: #fffcf0; border: 1px solid #ffeeba; color: var(--primary); margin-bottom: 8px; font-weight: 700; }
-  .email-col { text-align: left; }
+  .header { background: var(--primary); color: white; text-align: center; padding: 25px 20px 15px; border-radius: 24px 24px 0 0; }
+  .header h1 { margin: 0; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .header p { font-size: 11px; opacity: 0.7; margin: 5px 0; }
+  .level-badge { background: var(--accent); color: var(--primary); padding: 4px 20px; border-radius: 20px; font-weight: 800; display: inline-block; margin-top: 5px; font-size: 14px; }
+
+  .content { padding: 20px 15px; flex: 1; display: flex; flex-direction: column; justify-content: space-around; }
+
+  .circle { 
+    width: 160px; height: 160px; 
+    border: 8px solid var(--accent); 
+    border-radius: 50%; 
+    margin: 0 auto; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  }
+  .circle .units { font-size: 20px; font-weight: 800; color: var(--primary); margin: 3px 0; }
+  .circle .reward { font-size: 18px; font-weight: 700; color: var(--success); }
+
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 15px 0; }
+  .stat-box { background: #f9fafc; padding: 10px 2px; border-radius: 12px; border: 1px solid #f0f0f0; }
+  .stat-box small { font-size: 9px; color: #999; text-transform: uppercase; font-weight: 700; }
+  .stat-box span { font-size: 15px; font-weight: 800; color: var(--primary); }
+
+  .progress-section { width: 100%; }
+  .progress-container { background: #eee; border-radius: 20px; height: 28px; overflow: hidden; width: 100%; position: relative; }
+  .progress-bar { height: 100%; background: #3c4b8e; width: 0%; transition: width 1s ease; display: flex; align-items: center; justify-content: center; }
+  .progress-bar-text { color: white; font-size: 13px; font-weight: 800; }
+
+  .footer-info { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: #777; font-weight: 700; }
+
+  .footer { text-align: center; font-size: 11px; padding: 15px; color: #bbb; border-top: 1px solid #f2f2f2; background: #fafafa; border-radius: 0 0 24px 24px; }
 </style>
 </head>
 <body>
 
-<div id="loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;display:flex;justify-content:center;align-items:center;z-index:100;">UPDATING...</div>
-
 <div class="container">
-  <div class="header">
-    <h1>SPRING CONTEST</h1>
-    <p>24 Mar to 24 Jun (23:59 GMT)</p>
-    <div id="level-tag" class="level-badge">LEVEL -</div>
+  <!-- Màn hình nhập ID -->
+  <div class="email-box" id="email-box">
+    <h2 style="color: var(--primary); margin: 0;">User Progress</h2>
+    <p style="font-size: 13px; color: #666;">Nhập User ID để kiểm tra thứ hạng</p>
+    <input type="text" placeholder="Enter your ID..." id="userIdInput">
+    <button id="submitBtn" onclick="loadWidget()">View My Progress</button>
   </div>
 
-  <div class="content">
-    <div class="circle">
-         <span class="reward-label">Next Reward</span>
-         <span class="units" id="next-p">... Points</span>
-         <span class="reward-val" id="next-r">...</span>
+  <!-- Màn hình chính (Widget) -->
+  <div id="widget">
+    <div class="header">
+      <h1>Spring Contest</h1>
+      <p>Mar 24 - Jun 24 (23:59 GMT)</p>
+      <div class="level-badge" id="level-text">LEVEL 0</div>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-box"><small>Total Units</small><span id="team-units">0</span></div>
-      <div class="stat-box"><small>Total Points</small><span id="team-points">0</span></div>
-      <div class="stat-box"><small>Days Left</small><span id="days-left">0</span></div>
-    </div>
+    <div class="content">
+      <div class="circle">
+        <span style="font-size:10px; color:#999; text-transform:uppercase; font-weight:700;">Next Reward</span>
+        <div class="units" id="next-goal">---</div>
+        <div class="reward" id="next-reward">---</div>
+      </div>
 
-    <div class="progress-wrapper">
-      <div class="progress-container">
-        <div class="progress-bar" id="progress-bar">
-          <span class="progress-bar-text" id="progress-val">0%</span>
+      <div class="stats-grid">
+        <div class="stat-box"><small>Units</small><br><span id="stat-units">0</span></div>
+        <div class="stat-box"><small>Points</small><br><span id="stat-points">0</span></div>
+        <div class="stat-box"><small>Rank</small><br><span id="stat-rank">0</span></div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar">
+            <span class="progress-bar-text" id="progress-pct">0%</span>
+          </div>
+        </div>
+        <div class="footer-info">
+          <div id="progress-text">0 / 0 points</div>
+          <div id="time-left">⏰ Loading...</div>
         </div>
       </div>
     </div>
 
-    <div class="table">
-      <div id="table-body"></div>
-    </div>
+    <div class="footer">User ID: <span id="user-email" style="color: var(--primary); font-weight:700;"></span></div>
   </div>
 </div>
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1dAEb1EpadQgZY1WQgGJdbgqJLnA8oOZY78jKYNU-pF0uQ/exec?sheet=team1";
+const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1dAEb1EpadQgZY1WQgGJdbgqJLnA8oOZY78jKYNU-pF0uQ/exec";
 
-// Cấu trúc Levels dựa trên mục tiêu của bạn
-const LEVELS = [
-  { p: 1000, r: "$200" }, { p: 2000, r: "$500" }, { p: 5000, r: "$1,500" },
-  { p: 10000, r: "$3,500" }, { p: 25000, r: "$10,000" }, { p: 50000, r: "$25,000" }, { p: 150000, r: "$100,000" }
-];
+async function loadWidget() {
+  const userId = document.getElementById("userIdInput").value.trim();
+  if (!userId) return alert("Please enter your User ID");
 
-function maskEmail(email) {
-  if(!email || !email.includes("@")) return email;
-  const name = email.split("@")[0];
-  return name.length <= 4 ? name : name.slice(0, 2) + "**" + name.slice(-2);
+  const btn = document.getElementById("submitBtn");
+  btn.textContent = "Fetching Data...";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
+    const data = await res.json();
+    
+    if (data.error) { 
+      alert("Error: " + data.error); 
+      btn.textContent = "View My Progress";
+      btn.disabled = false;
+      return; 
+    }
+
+    document.getElementById("email-box").style.display = "none";
+    document.getElementById("widget").style.display = "flex";
+    renderData(data);
+  } catch (err) { 
+    console.error(err);
+    alert("Connection error.");
+    btn.textContent = "View My Progress";
+    btn.disabled = false;
+  }
 }
 
-function loadData() {
-  const cb = "jsonp_cb_" + Date.now();
-  window[cb] = (data) => {
-    document.getElementById("loading-overlay").style.display = "none";
-    render(data);
-  };
-  const s = document.createElement("script");
-  s.src = `${apiUrl}&callback=${cb}`;
-  document.body.appendChild(s);
-}
+function renderData(data) {
+  const points = Number(data.points) || 0;
+  const units = Number(data.units) || 0;
+  const rank = Number(data.rank) || 0;
 
-function render(data) {
-  const users = data.users || [];
-  const totalP = +data.totalPoints || 0; 
-  const totalU = +data.totalUnits || 0;
-  users.sort((a,b) => b.points - a.points);
+  document.getElementById("user-email").textContent = data.email || data.id || "N/A";
+  document.getElementById("stat-units").textContent = units.toLocaleString();
+  document.getElementById("stat-points").textContent = points.toLocaleString();
+  document.getElementById("stat-rank").textContent = "#" + rank;
 
-  document.getElementById("team-units").textContent = totalU.toLocaleString();
-  document.getElementById("team-points").textContent = totalP.toLocaleString();
-  document.getElementById("days-left").textContent = Math.max(0, Math.ceil((new Date("2026-06-24T23:59:59Z") - new Date()) / 864e5));
+  const levels = [
+    { points: 1000, reward: "$200" }, { points: 2000, reward: "$500" },
+    { points: 5000, reward: "$1,500" }, { points: 10000, reward: "$3,500" },
+    { points: 25000, reward: "$10,000" }, { points: 50000, reward: "$25,000" },
+    { points: 150000, reward: "$100,000" }
+  ];
 
-  // 1. Xác định Level hiện tại
-  let currentLvlIdx = -1;
-  LEVELS.forEach((l, idx) => { if(totalP >= l.p) currentLvlIdx = idx; });
-  document.getElementById("level-tag").textContent = `LEVEL ${currentLvlIdx + 1}`;
+  let currentLevel = 0;
+  levels.forEach((l, i) => { if (points >= l.points) currentLevel = i + 1; });
+  document.getElementById("level-text").textContent = `LEVEL ${currentLevel}`;
 
-  // 2. Xác định Next Reward
-  const nextLvl = LEVELS[currentLvlIdx + 1] || LEVELS[LEVELS.length - 1];
-  document.getElementById("next-p").textContent = nextLvl.p.toLocaleString() + " Points";
-  document.getElementById("next-r").textContent = nextLvl.r;
+  const nextL = levels.find(l => l.points > points) || levels[levels.length-1];
+  document.getElementById("next-goal").textContent = nextL.points.toLocaleString() + " Points";
+  document.getElementById("next-reward").textContent = nextL.reward;
 
-  // 3. TÍNH PROGRESS DỰA TRÊN NEXT REWARD (SỬA LẠI Ở ĐÂY)
-  // Công thức: (Điểm hiện tại / Điểm mục tiêu kế tiếp) * 100
-  let pct = (totalP / nextLvl.p) * 100;
-  pct = Math.min(100, Math.max(0, pct));
+  // LOGIC CHUẨN: Lấy points hiện tại chia cho mốc đích tiếp theo
+  const pct = Math.floor(Math.max(0, Math.min(100, (points / nextL.points) * 100)));
   
   const bar = document.getElementById("progress-bar");
-  const valText = document.getElementById("progress-val");
+  const pctLabel = document.getElementById("progress-pct");
+  
   bar.style.width = pct + "%";
-  valText.textContent = Math.round(pct) + "%";
+  pctLabel.textContent = pct + "%";
 
-  // 4. Render bảng thành viên
-  document.getElementById("table-body").innerHTML = `
-    <div class="row header-row">
-      <div></div><div style="text-align:left">Member</div><div>Units</div><div>Points</div><div>%</div>
-    </div>
-    ` + users.map((u, i) => `
-    <div class="row ${i === 0 && u.points > 0 ? 'top-rank' : ''}">
-      <div style="text-align:center">${i === 0 && u.points > 0 ? '👑' : ''}</div>
-      <div class="email-col">${maskEmail(u.email)}</div>
-      <div>${(u.units || 0).toLocaleString()}</div>
-      <div>${(u.points || 0).toLocaleString()}</div>
-      <div style="color:#999;font-size:12px;">${totalP > 0 ? ((u.points/totalP)*100).toFixed(1) : 0}%</div>
-    </div>
-  `).join("");
+  document.getElementById("progress-text").textContent = 
+    `${points.toLocaleString()} / ${nextL.points.toLocaleString()} pts`;
 }
 
-loadData();
+function updateTimer() {
+  const end = new Date("2026-06-24T23:59:59Z");
+  const now = new Date();
+  const diff = end - now;
+  const label = document.getElementById("time-left");
+  if (!label) return;
+  if (diff <= 0) return label.textContent = "Ended";
+  const d = Math.floor(diff / 864e5);
+  const h = Math.floor((diff % 864e5) / 36e5);
+  label.textContent = `⏰ ${d}d ${h}h Left`;
+}
+
+setInterval(updateTimer, 60000);
+updateTimer();
 </script>
 </body>
 </html>
