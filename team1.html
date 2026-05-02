@@ -30,7 +30,7 @@
   .circle .reward-val { font-size: 26px; font-weight: 800; color: var(--success); }
 
   .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 30px; }
-  .stat-box { background: #fff; padding: 15px 5px; border-radius: 15px; border: 1px solid #f0f2f5; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+  .stat-box { background: #fff; padding: 15px 5px; border-radius: 15px; border: 1px solid #f0f2f5; }
   .stat-box small { font-size: 10px; color: #aaa; text-transform: uppercase; display: block; font-weight: 700; margin-bottom: 8px; }
   .stat-box span { font-size: 18px; font-weight: 800; color: var(--primary); }
 
@@ -49,40 +49,30 @@
   }
   .progress-bar-text { color: white; font-size: 14px; font-weight: 800; }
 
-  .table { width: 100%; margin-top: 10px; }
+  .table { width: 100%; }
   .row { display: grid; grid-template-columns: 40px 1.5fr 0.8fr 0.8fr 0.7fr; padding: 14px 10px; align-items: center; background: #fff; border-radius: 12px; font-size: 14px; border-bottom: 1px solid #f1f1f1; color: #444; }
   .row.header-row { border: none; font-weight: 700; color: #bbb; font-size: 11px; text-transform: uppercase; }
   
-  .row.top-rank { 
-    background: #fffcf0; 
-    border: 1px solid #ffeeba; 
-    font-weight: 700; 
-    color: var(--primary); 
-    margin-bottom: 8px;
-  }
-  
+  .row.top-rank { background: #fffcf0; border: 1px solid #ffeeba; color: var(--primary); margin-bottom: 8px; font-weight: 700; }
   .email-col { text-align: left; }
-  .contrib { font-size: 12px; color: #999; font-weight: 600; }
-
-  #loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:white; display:flex; justify-content:center; align-items:center; z-index:100; font-weight:700; color:var(--primary); }
 </style>
 </head>
 <body>
 
-<div id="loading-overlay">SYNCHRONIZING...</div>
+<div id="loading-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;display:flex;justify-content:center;align-items:center;z-index:100;">UPDATING...</div>
 
 <div class="container">
   <div class="header">
     <h1>SPRING CONTEST</h1>
     <p>24 Mar to 24 Jun (23:59 GMT)</p>
-    <div id="level-tag" class="level-badge">LEVEL 4</div>
+    <div id="level-tag" class="level-badge">LEVEL -</div>
   </div>
 
   <div class="content">
     <div class="circle">
          <span class="reward-label">Next Reward</span>
-         <span class="units" id="next-p">25,000 Points</span>
-         <span class="reward-val" id="next-r">$10,000</span>
+         <span class="units" id="next-p">... Points</span>
+         <span class="reward-val" id="next-r">...</span>
     </div>
 
     <div class="stats-grid">
@@ -94,19 +84,12 @@
     <div class="progress-wrapper">
       <div class="progress-container">
         <div class="progress-bar" id="progress-bar">
-          <span class="progress-bar-text" id="progress-val">29%</span>
+          <span class="progress-bar-text" id="progress-val">0%</span>
         </div>
       </div>
     </div>
 
     <div class="table">
-      <div class="row header-row">
-        <div></div>
-        <div style="text-align:left">Member</div>
-        <div>Units</div>
-        <div>Points</div>
-        <div>%</div>
-      </div>
       <div id="table-body"></div>
     </div>
   </div>
@@ -115,6 +98,7 @@
 <script>
 const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1dAEb1EpadQgZY1WQgGJdbgqJLnA8oOZY78jKYNU-pF0uQ/exec?sheet=team1";
 
+// Cấu trúc Levels dựa trên mục tiêu của bạn
 const LEVELS = [
   { p: 1000, r: "$200" }, { p: 2000, r: "$500" }, { p: 5000, r: "$1,500" },
   { p: 10000, r: "$3,500" }, { p: 25000, r: "$10,000" }, { p: 50000, r: "$25,000" }, { p: 150000, r: "$100,000" }
@@ -122,8 +106,7 @@ const LEVELS = [
 
 function maskEmail(email) {
   if(!email || !email.includes("@")) return email;
-  const parts = email.split("@");
-  const name = parts[0];
+  const name = email.split("@")[0];
   return name.length <= 4 ? name : name.slice(0, 2) + "**" + name.slice(-2);
 }
 
@@ -139,8 +122,6 @@ function loadData() {
 }
 
 function render(data) {
-  if (data.error) return alert("Error: " + data.error);
-
   const users = data.users || [];
   const totalP = +data.totalPoints || 0; 
   const totalU = +data.totalUnits || 0;
@@ -148,23 +129,21 @@ function render(data) {
 
   document.getElementById("team-units").textContent = totalU.toLocaleString();
   document.getElementById("team-points").textContent = totalP.toLocaleString();
-  
-  const days = Math.max(0, Math.ceil((new Date("2026-06-24T23:59:59Z") - new Date()) / 864e5));
-  document.getElementById("days-left").textContent = days;
+  document.getElementById("days-left").textContent = Math.max(0, Math.ceil((new Date("2026-06-24T23:59:59Z") - new Date()) / 864e5));
 
-  // Level hiển thị cố định theo ảnh bạn gửi (Level 4) hoặc tự động theo Levels
-  let currentLvl = 0;
-  LEVELS.forEach((l, idx) => { if(totalP >= l.p) currentLvl = idx + 1; });
-  document.getElementById("level-tag").textContent = `LEVEL ${currentLvl}`;
+  // 1. Xác định Level hiện tại
+  let currentLvlIdx = -1;
+  LEVELS.forEach((l, idx) => { if(totalP >= l.p) currentLvlIdx = idx; });
+  document.getElementById("level-tag").textContent = `LEVEL ${currentLvlIdx + 1}`;
 
-  const nextLvl = LEVELS.find(l => l.p > totalP) || LEVELS[LEVELS.length-1];
+  // 2. Xác định Next Reward
+  const nextLvl = LEVELS[currentLvlIdx + 1] || LEVELS[LEVELS.length - 1];
   document.getElementById("next-p").textContent = nextLvl.p.toLocaleString() + " Points";
   document.getElementById("next-r").textContent = nextLvl.r;
 
-  // ĐỂ HIỂN THỊ ĐÚNG 29% NHƯ TRONG ẢNH KHI ĐIỂM LÀ 14,365:
-  // Chúng ta sẽ lấy tổng điểm chia cho 50,000 (Mốc Level 6)
-  const fixedGoal = 50000; 
-  let pct = (totalP / fixedGoal) * 100;
+  // 3. TÍNH PROGRESS DỰA TRÊN NEXT REWARD (SỬA LẠI Ở ĐÂY)
+  // Công thức: (Điểm hiện tại / Điểm mục tiêu kế tiếp) * 100
+  let pct = (totalP / nextLvl.p) * 100;
   pct = Math.min(100, Math.max(0, pct));
   
   const bar = document.getElementById("progress-bar");
@@ -172,13 +151,18 @@ function render(data) {
   bar.style.width = pct + "%";
   valText.textContent = Math.round(pct) + "%";
 
-  document.getElementById("table-body").innerHTML = users.map((u, i) => `
+  // 4. Render bảng thành viên
+  document.getElementById("table-body").innerHTML = `
+    <div class="row header-row">
+      <div></div><div style="text-align:left">Member</div><div>Units</div><div>Points</div><div>%</div>
+    </div>
+    ` + users.map((u, i) => `
     <div class="row ${i === 0 && u.points > 0 ? 'top-rank' : ''}">
-      <div class="crown-col">${i === 0 && u.points > 0 ? '👑' : ''}</div>
+      <div style="text-align:center">${i === 0 && u.points > 0 ? '👑' : ''}</div>
       <div class="email-col">${maskEmail(u.email)}</div>
       <div>${(u.units || 0).toLocaleString()}</div>
       <div>${(u.points || 0).toLocaleString()}</div>
-      <div class="contrib">${totalP > 0 ? ((u.points/totalP)*100).toFixed(1) : 0}%</div>
+      <div style="color:#999;font-size:12px;">${totalP > 0 ? ((u.points/totalP)*100).toFixed(1) : 0}%</div>
     </div>
   `).join("");
 }
