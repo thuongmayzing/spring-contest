@@ -7,85 +7,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  :root {
-    --primary: #1e2447;
-    --accent: #f4c542;
-    --bg: #f7f8fc;
-    --text-muted: #999;
-  }
-  
-  body { 
-    font-family: 'Montserrat', sans-serif; 
-    margin: 0; 
-    background: var(--bg); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    min-height: 100vh; 
-  }
-  
-  .container { 
-    max-width: 480px; 
-    width: 92%; 
-    background: white; 
-    border-radius: 24px; 
-    overflow: hidden; 
-    box-shadow: 0 12px 40px rgba(0,0,0,0.08); 
-    margin: 20px 0;
-  }
-
-  .login-box { 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 80px 20px; 
-    gap: 15px; 
-    text-align: center; 
-  }
+  :root { --primary: #1e2447; --accent: #f4c542; --bg: #f7f8fc; --text-muted: #999; }
+  body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+  .container { max-width: 480px; width: 92%; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); margin: 20px 0; }
+  .login-box { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 80px 20px; gap: 15px; text-align: center; }
   .login-box h2 { color: var(--primary); margin: 0 0 10px; font-weight: 800; font-size: 26px; text-transform: uppercase; letter-spacing: 1px; }
   .login-box input { padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 85%; font-family: inherit; font-size: 15px; outline: none; }
   .login-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 15px 30px; font-weight: 700; cursor: pointer; width: 92%; font-size: 16px; transition: 0.3s; }
-
   .header { background: var(--primary); color: white; text-align: center; padding: 45px 20px 35px; }
   .header .contest-name { font-size: 14px; font-weight: 600; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
   .header h1 { margin: 0; font-size: 32px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: #fff; }
-
   .content { padding: 30px 12px; }
-
-  .table-header { 
-    display: grid; 
-    grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 0 15px 12px; 
-    font-size: 10px; 
-    font-weight: 800; 
-    color: var(--text-muted); 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-  }
-  
+  .table-header { display: grid; grid-template-columns: 45px 1.2fr 60px 80px; padding: 0 15px 12px; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
   .list-container { display: flex; flex-direction: column; gap: 10px; }
-  
-  .row { 
-    display: grid; 
-    grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 18px 15px; 
-    align-items: center; 
-    background: #fff; 
-    border-radius: 16px; 
-    font-size: 13px; 
-    border: 1px solid #f2f2f2; 
-    color: #444;
-  }
-
-  .row.top1 { background: #fffdf2; border-color: var(--accent); font-weight: 700; box-shadow: 0 4px 15px rgba(244, 197, 66, 0.12); }
+  .row { display: grid; grid-template-columns: 45px 1.2fr 60px 80px; padding: 18px 15px; align-items: center; background: #fff; border-radius: 16px; font-size: 13px; border: 1px solid #f2f2f2; color: #444; }
+  .row.top1 { background: #fffdf2; border-color: var(--accent); font-weight: 700; }
   .row.me { background: #eff2ff; border-color: #3d4da0; border-style: dashed; font-weight: 800; }
-
   .rank-col { font-weight: 800; text-align: center; }
   .name-col { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
   .level-col { text-align: center; font-weight: 700; color: #2ecc71; font-size: 12px; }
   .points-col { font-weight: 700; text-align: right; color: var(--primary); font-size: 14px; }
-
   #list-wrapper { display: none; width: 100%; }
   .loading { text-align: center; padding: 40px; color: var(--text-muted); font-weight: 600; }
 </style>
@@ -96,7 +37,7 @@
   <div class="login-box" id="login">
     <span style="font-size: 40px; margin-bottom: 10px;">🏆</span>
     <h2>Leaderboard</h2>
-    <input type="text" id="userIdInput" placeholder="Enter your userID">
+    <input type="text" id="userIdInput" placeholder="Enter your authorized ID">
     <button onclick="start()">View Rankings</button>
   </div>
 
@@ -105,7 +46,6 @@
       <span class="contest-name">Spring Contest</span>
       <h1>LEADERBOARD</h1>
     </div>
-
     <div class="content">
       <div class="table-header">
         <div>Rank</div>
@@ -113,7 +53,6 @@
         <div style="text-align:center">Level</div>
         <div style="text-align:right">Points</div>
       </div>
-      
       <div class="list-container" id="list">
         <div class="loading">Loading rankings...</div>
       </div>
@@ -122,32 +61,41 @@
 </div>
 
 <script>
-// Cập nhật API URL chính xác của bạn
 const apiUrl = "https://script.google.com/macros/s/AKfycbzAxLNImv5gHZEDrH5uMo-p7doRlJrmee3dfT-bBP_6K3w8N4zRAF-GyI-OsE17ST1pKA/exec";
-let currentUserId = "";
 
-const LEVELS = [
-  { points: 1000 }, { points: 2000 }, { points: 5000 }, { points: 10000 }, { points: 25000 }, { points: 50000 }, { points: 150000 }
+// DANH SÁCH USER ĐƯỢC PHÉP TRUY CẬP (Thay thế bằng list của bạn)
+const ALLOWED_USERS = [
+  "org_uvtyyEeLT59VRIfm",
+  "google-oauth2|101506502897481310694",
+  "org_oF3wwlAX0E4gcOdG",
+  "org_sWrpFXd8XjcmdqRE",
+  "org_jRMWckB3e7WtKH3C"
 ];
 
+let currentUserId = "";
+
+const LEVELS = [{ points: 1000 }, { points: 2000 }, { points: 5000 }, { points: 10000 }, { points: 25000 }, { points: 50000 }, { points: 150000 }];
+
 function maskEmail(email){
-  if(!email) return "Unknown";
-  if(!email.includes("@")) return email;
+  if(!email || !email.includes("@")) return email || "Unknown";
   const [n,d] = email.split("@");
   return n.slice(0,2) + "***@" + d;
 }
 
 function getLevel(points) {
   let level = 0;
-  for (let i = 0; i < LEVELS.length; i++) {
-    if (points >= LEVELS[i].points) level = i + 1;
-  }
+  for (let i = 0; i < LEVELS.length; i++) { if (points >= LEVELS[i].points) level = i + 1; }
   return level;
 }
 
 function start(){
   const userId = document.getElementById("userIdInput").value.trim();
-  if(!userId) return alert("Enter userID");
+  if(!userId) return alert("Please enter your ID");
+
+  // KIỂM TRA QUYỀN TRUY CẬP TRƯỚC KHI GỌI API
+  if (!ALLOWED_USERS.includes(userId)) {
+    return alert("Access Denied: Your ID is not on the authorized list.");
+  }
 
   currentUserId = userId;
   document.getElementById("login").style.display = "none";
@@ -156,7 +104,6 @@ function start(){
 }
 
 function loadLeaderboard(){
-  // Thêm action=leaderboard để script trả về danh sách thay vì thông tin cá nhân
   const url = `${apiUrl}?id=${encodeURIComponent(currentUserId)}&action=leaderboard&callback=handleData`;
   const script = document.createElement("script");
   script.src = url;
@@ -172,16 +119,14 @@ window.handleData = function(data){
 }
 
 function renderLeaderboard(data){
-  // Xử lý linh hoạt các định dạng dữ liệu trả về
   const leaderboard = data.leaderboard || data.users || (Array.isArray(data) ? data : []);
   const listDiv = document.getElementById("list");
 
   if (leaderboard.length === 0) {
-    listDiv.innerHTML = `<div class="loading">No data found.</div>`;
+    listDiv.innerHTML = `<div class="loading">No ranking data found.</div>`;
     return;
   }
 
-  // Sắp xếp lại theo điểm
   leaderboard.sort((a, b) => (b.points || 0) - (a.points || 0));
 
   let html = leaderboard.map((u, index) => {
@@ -199,19 +144,6 @@ function renderLeaderboard(data){
     `;
   }).join("");
 
-  // Nếu bạn không nằm trong top nhưng có dữ liệu cá nhân trả về riêng
-  if(!leaderboard.some(u => (u.userId === currentUserId || u.id === currentUserId)) && data.currentUser){
-    html += `
-      <div style="text-align:center; color:#ccc; margin: 10px 0; font-size:12px;">•••</div>
-      <div class="row me">
-        <div class="rank-col">#${data.currentUser.rank}</div>
-        <div class="name-col">YOU</div>
-        <div class="level-col">${getLevel(data.currentUser.points)}</div>
-        <div class="points-col">${data.currentUser.points.toLocaleString()}</div>
-      </div>
-    `;
-  }
-  
   listDiv.innerHTML = html;
 }
 </script>
