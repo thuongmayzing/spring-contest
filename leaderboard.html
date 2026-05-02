@@ -8,51 +8,33 @@
 
 <style>
   :root { --primary: #1e2447; --accent: #f4c542; --bg: #f7f8fc; --text-muted: #999; }
-  
-  body { 
-    font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); 
-    display: flex; justify-content: center; align-items: center; min-height: 100vh; 
-  }
-  
+  body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
   .container { max-width: 440px; width: 92%; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.08); margin: 20px 0; }
 
-  /* Login Box */
   .login-box { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 20px; gap: 15px; text-align: center; }
   .login-box h2 { color: var(--primary); margin: 0; font-weight: 800; font-size: 24px; text-transform: uppercase; }
   .login-box input { padding: 12px; border-radius: 10px; border: 1px solid #ddd; width: 85%; font-family: inherit; outline: none; }
   .login-box button { background: var(--primary); color: white; border: none; border-radius: 10px; padding: 12px; font-weight: 700; cursor: pointer; width: 90%; font-size: 16px; }
 
-  /* Header */
   .header { background: var(--primary); color: white; text-align: center; padding: 30px 20px; }
   .header .contest-name { font-size: 10px; font-weight: 600; opacity: 0.7; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; display: block; }
   .header h1 { margin: 0; font-size: 24px; font-weight: 800; text-transform: uppercase; }
 
   .content { padding: 15px 10px; }
-
-  /* Table UI */
-  .table-header { 
-    display: grid; grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 0 10px 10px; font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; 
-  }
+  .table-header { display: grid; grid-template-columns: 45px 1.2fr 60px 80px; padding: 0 10px 10px; font-size: 9px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+  .list-container { display: flex; flex-direction: column; gap: 8px; max-height: 450px; overflow-y: auto; }
   
-  .list-container { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
-  
-  .row { 
-    display: grid; grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 12px 10px; align-items: center; background: #fff; 
-    border-radius: 12px; font-size: 12px; border: 1px solid #f2f2f2; color: #444;
-  }
-
+  .row { display: grid; grid-template-columns: 45px 1.2fr 60px 80px; padding: 12px 10px; align-items: center; background: #fff; border-radius: 12px; font-size: 12px; border: 1px solid #f2f2f2; color: #444; }
   .row.top1 { background: #fffdf2; border-color: var(--accent); font-weight: 700; }
   .row.me { background: #eff2ff; border: 1.5px dashed #3d4da0; font-weight: 800; }
 
   .rank-col { font-weight: 800; text-align: center; }
-  .name-col { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 5px; }
+  .name-col { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 5px; text-align: left; }
   .level-col { text-align: center; font-weight: 700; color: #2ecc71; }
   .points-col { font-weight: 700; text-align: right; color: var(--primary); }
 
   #list-wrapper { display: none; width: 100%; }
-  .loading { text-align: center; padding: 30px; color: var(--text-muted); font-size: 13px; }
+  .loading { text-align: center; padding: 30px; color: var(--text-muted); font-size: 13px; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -62,7 +44,7 @@
     <span style="font-size: 40px;">🏆</span>
     <h2>Leaderboard</h2>
     <input type="text" id="userIdInput" placeholder="Enter your User ID">
-    <button id="btnStart" onclick="start()">View Rankings</button>
+    <button onclick="start()">View Rankings</button>
   </div>
 
   <div id="list-wrapper">
@@ -78,7 +60,6 @@
         <div style="text-align:center">Level</div>
         <div style="text-align:right">Points</div>
       </div>
-      
       <div class="list-container" id="list">
         <div class="loading">Loading rankings...</div>
       </div>
@@ -87,7 +68,6 @@
 </div>
 
 <script>
-// Đảm bảo URL này chính xác và đã được Deploy ở chế độ "Anyone"
 const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1dAEb1EpadQgZY1WQgGJdbgqJLnA8oOZY78jKYNU-pF0uQ/exec";
 let currentUserId = "";
 
@@ -96,7 +76,7 @@ const LEVELS = [
 ];
 
 function maskEmail(email){
-  if(!email) return "Unknown";
+  if(!email) return "N/A";
   if(!email.includes("@")) return email;
   const name = email.split("@")[0];
   return name.length <= 4 ? name : name.slice(0, 2) + "***" + name.slice(-2);
@@ -110,57 +90,58 @@ function getLevel(points) {
   return level;
 }
 
-async function start(){
+function start(){
   const userId = document.getElementById("userIdInput").value.trim();
-  if(!userId) return alert("Please enter User ID");
-
+  if(!userId) return alert("Vui lòng nhập ID");
   currentUserId = userId;
   document.getElementById("login").style.display = "none";
   document.getElementById("list-wrapper").style.display = "block";
-  
-  await loadLeaderboard();
+  loadLeaderboard();
 }
 
-async function loadLeaderboard(){
+// Hỗ trợ cả Fetch và JSONP phòng trường hợp script backend thay đổi
+function loadLeaderboard(){
   const listDiv = document.getElementById("list");
-  // Đổi tham số thành ?id= để đồng bộ với script của bạn
-  const targetUrl = `${apiUrl}?id=${encodeURIComponent(currentUserId)}&action=leaderboard`;
-
-  try {
-    const response = await fetch(targetUrl);
-    const data = await response.json();
-    
-    if(data.error) {
-      listDiv.innerHTML = `<div style="color:red; text-align:center; padding:20px;">${data.error}</div>`;
-      return;
-    }
+  const callbackName = "handleLeaderboard_" + Date.now();
+  
+  // Tạo hàm callback toàn cục cho JSONP
+  window[callbackName] = function(data) {
     renderLeaderboard(data);
-  } catch (error) {
-    console.error(error);
-    listDiv.innerHTML = `<div style="text-align:center; padding:20px;">Connection error. Please try again.</div>`;
-  }
+  };
+
+  const script = document.createElement("script");
+  // Thêm action=leaderboard và sheet=team1 để lấy toàn bộ danh sách
+  script.src = `${apiUrl}?id=${encodeURIComponent(currentUserId)}&action=leaderboard&sheet=team1&callback=${callbackName}`;
+  script.onerror = () => {
+    listDiv.innerHTML = `<div class="loading">Lỗi kết nối script.</div>`;
+  };
+  document.body.appendChild(script);
 }
 
 function renderLeaderboard(data){
-  // Giả sử script trả về mảng users trong data.leaderboard hoặc data.users
-  const leaderboard = data.leaderboard || data.users || [];
   const listDiv = document.getElementById("list");
   
+  // Tìm mảng dữ liệu trong các cấu trúc JSON khác nhau
+  const leaderboard = data.leaderboard || data.users || (Array.isArray(data) ? data : []);
+  
   if (leaderboard.length === 0) {
-    listDiv.innerHTML = "No data available";
+    listDiv.innerHTML = `<div class="loading">No data found in leaderboard.</div>`;
     return;
   }
 
-  let html = leaderboard.map(u => {
-    // Kiểm tra ID để highlight (u.userId hoặc u.id hoặc u.email tùy theo script của bạn)
-    const isMe = (u.id === currentUserId || u.userId === currentUserId || u.email === currentUserId);
-    const rankDisplay = u.rank === 1 ? '👑' : '#' + u.rank;
+  // Sắp xếp theo điểm nếu backend chưa sắp xếp
+  leaderboard.sort((a, b) => (b.points || 0) - (a.points || 0));
+
+  let html = leaderboard.map((u, index) => {
+    const rank = u.rank || (index + 1);
+    const isMe = (u.id == currentUserId || u.email == currentUserId);
+    const rankDisplay = rank === 1 ? '👑' : '#' + rank;
     
     return `
-      <div class="row ${isMe ? 'me' : ''} ${u.rank === 1 ? 'top1' : ''}">
+      <div class="row ${isMe ? 'me' : ''} ${rank === 1 ? 'top1' : ''}">
         <div class="rank-col">${rankDisplay}</div>
         <div class="name-col">${isMe ? "YOU" : maskEmail(u.email || u.id)}</div>
-        <div class="level-col">${getLevel(u.points)}</div>
+        <div class="level-col">${getLevel(u.points || 0)}</div>
         <div class="points-col">${(u.points || 0).toLocaleString()}</div>
       </div>
     `;
