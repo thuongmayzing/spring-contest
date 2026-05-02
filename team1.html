@@ -3,94 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Mini Progress Widget</title>
+<title>Mini Progress - Spring Contest 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --primary: #1e2447; --accent: #f4c542; --success: #2ecc71; }
+  :root { --primary: #1e2447; --accent: #f4c542; --bg: #f7f8fc; --success: #2ecc71; }
   * { box-sizing: border-box; }
   body { 
-    font-family: 'Montserrat', sans-serif; 
-    margin: 0; background: transparent; 
+    font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); 
     display: flex; justify-content: center; align-items: center; 
     height: 100vh; overflow: hidden; 
   }
 
+  /* Thu nhỏ container */
   .container { 
-    width: 100%; max-width: 340px; 
-    background: white; border-radius: 16px; 
-    display: flex; flex-direction: column; 
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    border: 1px solid #eee;
+    width: 95%; max-width: 320px; /* Thu hẹp chiều ngang */
+    max-height: 90vh; background: white; 
+    border-radius: 16px; display: flex; flex-direction: column; 
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1); overflow: hidden;
   }
 
-  /* Compact Login */
-  .email-box { padding: 20px; text-align: center; }
-  .email-box input { 
-    padding: 10px; border-radius: 8px; border: 1px solid #ddd; 
-    width: 100%; margin-bottom: 10px; font-family: inherit; 
-  }
-  .email-box button { 
-    background: var(--primary); color: white; border: none; 
-    border-radius: 8px; padding: 10px; width: 100%; 
-    font-weight: 700; cursor: pointer; font-family: inherit;
-  }
+  .email-box { padding: 25px 15px; text-align: center; gap: 10px; display: flex; flex-direction: column; }
+  .email-box input { padding: 10px; border-radius: 8px; border: 1.5px solid #eee; width: 100%; font-size: 14px; outline: none; }
+  .email-box button { background: var(--primary); color: white; border: none; border-radius: 8px; padding: 10px; font-weight: 700; cursor: pointer; width: 100%; font-size: 14px; }
 
-  /* Compact Widget */
-  #widget { display: none; flex-direction: column; }
+  #widget { display: none; flex-direction: column; height: 100%; }
   
-  .header { 
-    background: var(--primary); color: white; 
-    padding: 12px; text-align: center; border-radius: 16px 16px 0 0; 
-  }
-  .header h1 { margin: 0; font-size: 16px; text-transform: uppercase; }
-  .level-badge { 
-    background: var(--accent); color: var(--primary); 
-    padding: 2px 12px; border-radius: 10px; 
-    font-weight: 800; font-size: 11px; margin-top: 4px; display: inline-block;
-  }
+  /* Thu nhỏ Header */
+  .header { background: var(--primary); color: white; text-align: center; padding: 15px 10px 10px; }
+  .header h1 { margin: 0; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+  .header p { font-size: 9px; opacity: 0.7; margin: 2px 0; }
+  .level-badge { background: var(--accent); color: var(--primary); padding: 2px 12px; border-radius: 10px; font-weight: 800; font-size: 11px; margin-top: 4px; display: inline-block; }
 
-  .content { padding: 12px; text-align: center; }
+  .content { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
 
+  /* Thu nhỏ Circle */
   .circle { 
     width: 110px; height: 110px; 
-    border: 5px solid var(--accent); border-radius: 50%; 
-    margin: 0 auto 12px; display: flex; flex-direction: column; 
-    justify-content: center; align-items: center; 
+    border: 6px solid var(--accent); border-radius: 50%; 
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 10px;
   }
-  .circle span { font-size: 8px; color: #999; text-transform: uppercase; }
-  .circle .units { font-size: 14px; font-weight: 800; color: var(--primary); }
-  .circle .reward { font-size: 15px; font-weight: 800; color: var(--success); }
+  .circle span { font-size: 8px; color: #999; text-transform: uppercase; font-weight: 700; }
+  .circle .units { font-size: 14px; font-weight: 800; color: var(--primary); margin: 2px 0; }
+  .circle .reward { font-size: 15px; font-weight: 700; color: var(--success); }
 
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 12px; }
-  .stat-box { background: #f8f9fb; padding: 6px 2px; border-radius: 8px; border: 1px solid #f0f0f0; }
-  .stat-box small { font-size: 8px; color: #aaa; text-transform: uppercase; font-weight: 700; }
+  /* Thu nhỏ Grid */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; width: 100%; margin-bottom: 10px; }
+  .stat-box { background: #f9fafc; padding: 6px 2px; border-radius: 8px; border: 1px solid #f0f0f0; text-align: center; }
+  .stat-box small { font-size: 8px; color: #999; text-transform: uppercase; font-weight: 700; }
   .stat-box span { font-size: 12px; font-weight: 800; color: var(--primary); }
 
-  .progress-container { background: #eee; border-radius: 10px; height: 18px; overflow: hidden; position: relative; }
-  .progress-bar { 
-    height: 100%; background: #3c4b8e; width: 0%; 
-    transition: width 1s; display: flex; align-items: center; justify-content: center; 
-  }
+  /* Thu nhỏ Progress */
+  .progress-section { width: 100%; }
+  .progress-container { background: #eee; border-radius: 10px; height: 18px; overflow: hidden; width: 100%; position: relative; }
+  .progress-bar { height: 100%; background: #3c4b8e; width: 0%; transition: width 1s ease; display: flex; align-items: center; justify-content: center; }
   .progress-bar-text { color: white; font-size: 10px; font-weight: 800; }
 
-  .footer-info { display: flex; justify-content: space-between; margin-top: 5px; font-size: 9px; color: #888; font-weight: 700; }
-  .footer { 
-    font-size: 9px; padding: 8px; color: #bbb; 
-    text-align: center; border-top: 1px solid #f5f5f5; 
-  }
+  .footer-info { display: flex; justify-content: space-between; margin-top: 5px; font-size: 9px; color: #777; font-weight: 700; }
+  .footer { text-align: center; font-size: 9px; padding: 8px; color: #bbb; border-top: 1px solid #f2f2f2; background: #fafafa; }
 </style>
 </head>
 <body>
 
 <div class="container">
   <div class="email-box" id="email-box">
-    <input type="text" placeholder="User ID" id="userIdInput">
-    <button id="submitBtn" onclick="loadWidget()">Check Progress</button>
+    <h3 style="color: var(--primary); margin: 0; font-size: 16px;">User Progress</h3>
+    <input type="text" placeholder="ID của bạn..." id="userIdInput">
+    <button id="submitBtn" onclick="loadWidget()">Check Now</button>
   </div>
 
   <div id="widget">
     <div class="header">
       <h1>Spring Contest</h1>
+      <p>Mar 24 - Jun 24 (23:59 GMT)</p>
       <div class="level-badge" id="level-text">LEVEL 0</div>
     </div>
 
@@ -107,17 +92,20 @@
         <div class="stat-box"><small>Rank</small><br><span id="stat-rank">0</span></div>
       </div>
 
-      <div class="progress-container">
-        <div class="progress-bar" id="progress-bar">
-          <span class="progress-bar-text" id="progress-pct">0%</span>
+      <div class="progress-section">
+        <div class="progress-container">
+          <div class="progress-bar" id="progress-bar">
+            <span class="progress-bar-text" id="progress-pct">0%</span>
+          </div>
+        </div>
+        <div class="footer-info">
+          <div id="progress-text">0 / 0 pts</div>
+          <div id="time-left">⏰ --d</div>
         </div>
       </div>
-      <div class="footer-info">
-        <div id="progress-text">0/0 pts</div>
-        <div id="time-left">⏰ --d</div>
-      </div>
     </div>
-    <div class="footer">ID: <span id="user-email"></span></div>
+
+    <div class="footer">ID: <span id="user-email" style="color: var(--primary); font-weight:700;"></span></div>
   </div>
 </div>
 
@@ -126,48 +114,75 @@ const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1
 
 async function loadWidget() {
   const userId = document.getElementById("userIdInput").value.trim();
-  if (!userId) return;
+  if (!userId) return alert("Vui lòng nhập ID");
+
   const btn = document.getElementById("submitBtn");
   btn.textContent = "...";
-  
+  btn.disabled = true;
+
   try {
     const res = await fetch(apiUrl + "?id=" + encodeURIComponent(userId));
     const data = await res.json();
-    if (data.error) { alert("Not found"); btn.textContent="Check Progress"; return; }
+    
+    if (data.error) { 
+      alert("Không tìm thấy ID"); 
+      btn.textContent = "Check Now";
+      btn.disabled = false;
+      return; 
+    }
+
     document.getElementById("email-box").style.display = "none";
     document.getElementById("widget").style.display = "flex";
     renderData(data);
-  } catch (err) { btn.textContent="Check Progress"; }
+  } catch (err) { 
+    alert("Lỗi kết nối");
+    btn.textContent = "Check Now";
+    btn.disabled = false;
+  }
 }
 
 function renderData(data) {
   const points = Number(data.points) || 0;
+  const units = Number(data.units) || 0;
+  const rank = Number(data.rank) || 0;
+
   document.getElementById("user-email").textContent = data.id || data.email || "N/A";
-  document.getElementById("stat-units").textContent = (data.units || 0).toLocaleString();
+  document.getElementById("stat-units").textContent = units.toLocaleString();
   document.getElementById("stat-points").textContent = points.toLocaleString();
-  document.getElementById("stat-rank").textContent = "#" + (data.rank || 0);
+  document.getElementById("stat-rank").textContent = "#" + rank;
 
   const levels = [
-    { p: 1000, r: "$200" }, { p: 2000, r: "$500" }, { p: 5000, r: "$1,500" },
-    { p: 10000, r: "$3,500" }, { p: 25000, r: "$10,000" }, { p: 50000, r: "$25,000" }, { p: 150000, r: "$100,000" }
+    { points: 1000, reward: "$200" }, { points: 2000, reward: "$500" },
+    { points: 5000, reward: "$1,500" }, { points: 10000, reward: "$3,500" },
+    { points: 25000, reward: "$10,000" }, { points: 50000, reward: "$25,000" },
+    { points: 150000, reward: "$100,000" }
   ];
 
-  let lvl = 0;
-  levels.forEach((l, i) => { if (points >= l.p) lvl = i + 1; });
-  document.getElementById("level-text").textContent = `LEVEL ${lvl}`;
+  let currentLevel = 0;
+  levels.forEach((l, i) => { if (points >= l.points) currentLevel = i + 1; });
+  document.getElementById("level-text").textContent = `LEVEL ${currentLevel}`;
 
-  const next = levels.find(l => l.p > points) || levels[levels.length-1];
-  document.getElementById("next-goal").textContent = next.p.toLocaleString();
-  document.getElementById("next-reward").textContent = next.r;
+  const nextL = levels.find(l => l.points > points) || levels[levels.length-1];
+  document.getElementById("next-goal").textContent = nextL.points.toLocaleString();
+  document.getElementById("next-reward").textContent = nextL.reward;
 
-  const pct = Math.floor(Math.min(100, (points / next.p) * 100));
+  const pct = Math.floor(Math.max(0, Math.min(100, (points / nextL.points) * 100)));
   document.getElementById("progress-bar").style.width = pct + "%";
   document.getElementById("progress-pct").textContent = pct + "%";
-  document.getElementById("progress-text").textContent = `${points.toLocaleString()}/${next.p.toLocaleString()}`;
-
-  const days = Math.max(0, Math.ceil((new Date("2026-06-24T23:59:59Z") - new Date()) / 864e5));
-  document.getElementById("time-left").textContent = `⏰ ${days}d`;
+  document.getElementById("progress-text").textContent = `${points.toLocaleString()} / ${nextL.points.toLocaleString()} pts`;
 }
+
+function updateTimer() {
+  const end = new Date("2026-06-24T23:59:59Z");
+  const diff = end - new Date();
+  const label = document.getElementById("time-left");
+  if (!label) return;
+  if (diff <= 0) return label.textContent = "Ended";
+  const d = Math.floor(diff / 864e5);
+  label.textContent = `⏰ ${d}d Left`;
+}
+
+updateTimer();
 </script>
 </body>
 </html>
