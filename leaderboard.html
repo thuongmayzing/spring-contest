@@ -43,7 +43,7 @@
   <div class="login-box" id="login">
     <span style="font-size: 40px;">🏆</span>
     <h2>Leaderboard</h2>
-    <input type="text" id="userIdInput" placeholder="Enter your User ID">
+    <input type="text" id="userIdInput" placeholder="Enter User ID">
     <button onclick="start()">View Rankings</button>
   </div>
 
@@ -61,7 +61,7 @@
         <div style="text-align:right">Points</div>
       </div>
       <div class="list-container" id="list">
-        <div class="loading">Loading rankings...</div>
+        <div class="loading">Loading...</div>
       </div>
     </div>
   </div>
@@ -71,9 +71,7 @@
 const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1dAEb1EpadQgZY1WQgGJdbgqJLnA8oOZY78jKYNU-pF0uQ/exec";
 let currentUserId = "";
 
-const LEVELS = [
-  { p: 1000 }, { p: 2000 }, { p: 5000 }, { p: 10000 }, { p: 25000 }, { p: 50000 }, { p: 150000 }
-];
+const LEVELS = [{p:1000},{p:2000},{p:5000},{p:10000},{p:25000},{p:50000},{p:150000}];
 
 function maskEmail(email){
   if(!email) return "N/A";
@@ -84,9 +82,7 @@ function maskEmail(email){
 
 function getLevel(points) {
   let level = 0;
-  for (let i = 0; i < LEVELS.length; i++) {
-    if (points >= LEVELS[i].p) level = i + 1;
-  }
+  for (let i = 0; i < LEVELS.length; i++) { if (points >= LEVELS[i].p) level = i + 1; }
   return level;
 }
 
@@ -99,55 +95,45 @@ function start(){
   loadLeaderboard();
 }
 
-// Hỗ trợ cả Fetch và JSONP phòng trường hợp script backend thay đổi
 function loadLeaderboard(){
-  const listDiv = document.getElementById("list");
-  const callbackName = "handleLeaderboard_" + Date.now();
-  
-  // Tạo hàm callback toàn cục cho JSONP
-  window[callbackName] = function(data) {
-    renderLeaderboard(data);
-  };
-
-  const script = document.createElement("script");
-  // Thêm action=leaderboard và sheet=team1 để lấy toàn bộ danh sách
-  script.src = `${apiUrl}?id=${encodeURIComponent(currentUserId)}&action=leaderboard&sheet=team1&callback=${callbackName}`;
-  script.onerror = () => {
-    listDiv.innerHTML = `<div class="loading">Lỗi kết nối script.</div>`;
-  };
-  document.body.appendChild(script);
+  const cb = "jsonp_leaderboard_" + Date.now();
+  window[cb] = (data) => renderLeaderboard(data);
+  const s = document.createElement("script");
+  // Thêm action=leaderboard để báo cho script backend trả về toàn bộ list
+  s.src = `${apiUrl}?id=${encodeURIComponent(currentUserId)}&action=leaderboard&callback=${cb}`;
+  document.body.appendChild(s);
 }
 
 function renderLeaderboard(data){
   const listDiv = document.getElementById("list");
   
-  // Tìm mảng dữ liệu trong các cấu trúc JSON khác nhau
-  const leaderboard = data.leaderboard || data.users || (Array.isArray(data) ? data : []);
-  
-  if (leaderboard.length === 0) {
-    listDiv.innerHTML = `<div class="loading">No data found in leaderboard.</div>`;
+  // Kiểm tra mọi khả năng dữ liệu trả về: mảng trực tiếp, data.leaderboard, hoặc data.users
+  let list = [];
+  if (Array.isArray(data)) list = data;
+  else if (data.leaderboard && Array.isArray(data.leaderboard)) list = data.leaderboard;
+  else if (data.users && Array.isArray(data.users)) list = data.users;
+  else if (typeof data === 'object') list = [data]; // Nếu chỉ trả về 1 user duy nhất
+
+  if (list.length === 0 || (list.length === 1 && !list[0].points)) {
+    listDiv.innerHTML = `<div class="loading">No data found. Check your User ID.</div>`;
     return;
   }
 
-  // Sắp xếp theo điểm nếu backend chưa sắp xếp
-  leaderboard.sort((a, b) => (b.points || 0) - (a.points || 0));
+  // Sắp xếp
+  list.sort((a, b) => (b.points || 0) - (a.points || 0));
 
-  let html = leaderboard.map((u, index) => {
-    const rank = u.rank || (index + 1);
-    const isMe = (u.id == currentUserId || u.email == currentUserId);
-    const rankDisplay = rank === 1 ? '👑' : '#' + rank;
-    
+  listDiv.innerHTML = list.map((u, i) => {
+    const isMe = (u.id == currentUserId || u.email == currentUserId || u.userId == currentUserId);
+    const rank = u.rank || (i + 1);
     return `
       <div class="row ${isMe ? 'me' : ''} ${rank === 1 ? 'top1' : ''}">
-        <div class="rank-col">${rankDisplay}</div>
-        <div class="name-col">${isMe ? "YOU" : maskEmail(u.email || u.id)}</div>
+        <div class="rank-col">${rank === 1 ? '👑' : '#' + rank}</div>
+        <div class="name-col">${isMe ? "YOU" : maskEmail(u.email || u.id || u.userId)}</div>
         <div class="level-col">${getLevel(u.points || 0)}</div>
         <div class="points-col">${(u.points || 0).toLocaleString()}</div>
       </div>
     `;
   }).join("");
-
-  listDiv.innerHTML = html;
 }
 </script>
 </body>
