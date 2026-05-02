@@ -1,119 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Contest 2026 - Perfect Fit</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --primary: #1e2447;
-    --accent: #f4c542;
-    --bg: #f7f8fc;
-  }
-  body { font-family: 'Montserrat', sans-serif; margin: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-  
-  .container { max-width: 480px; width: 92%; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 35px rgba(0,0,0,0.08); margin: 15px 0; }
-  
-  /* HEADER: Gọn gàng, tinh tế hơn */
-  .header { background: var(--primary); color: white; text-align: center; padding: 30px 20px 20px; }
-  .header h1 { margin: 0; font-size: 28px; letter-spacing: 0.5px; font-weight: 700; } /* Giảm letter-spacing & bold */
-  .header p { opacity: 0.8; font-size: 14px; margin: 8px 0; color: #eee; }
-  .level-badge { background: var(--accent); color: var(--primary); padding: 5px 22px; border-radius: 20px; font-weight: 800; font-size: 17px; display: inline-block; margin-top: 10px; }
-
-  .content { padding: 20px 15px; text-align: center; }
-
-  /* CIRCLE: Cân đối lại */
-  .circle { width: 180px; height: 180px; border: 7px solid var(--accent); border-radius: 50%; margin: 0 auto 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; }
-  .circle .reward-label { font-size: 11px; text-transform: uppercase; color: #999; letter-spacing: 1px; font-weight: 600; }
-  .circle .units { font-size: 22px; font-weight: 800; color: var(--primary); margin: 3px 0; }
-  .circle .reward-val { font-size: 19px; font-weight: 700; color: #2ecc71; }
-
-  /* STATS */
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 25px; } /* Space 1 */
-  .stat-box { background: #fff; padding: 12px 5px; border-radius: 12px; border: 1px solid #eee; }
-  .stat-box small { font-size: 11px; color: #999; text-transform: uppercase; display: block; font-weight: 700; margin-bottom: 4px; }
-  .stat-box span { font-size: 16px; font-weight: 800; color: var(--primary); }
-
-  /* PROGRESS BAR: Căn giữa khoảng cách */
-  .progress-wrapper { width: 95%; margin: 0 auto 25px; position: relative; } /* Space 2 - Bằng Space 1 */
-  .progress-container { background: #eee; border-radius: 20px; height: 26px; overflow: hidden; }
-  .progress-bar { 
-    height: 100%; 
-    background: linear-gradient(90deg, #1e2447, #3d4da0); 
-    width: 0%; 
-    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-  .progress-bar-text { color: white; font-size: 12px; font-weight: 800; padding-right: 10px; }
-
-  /* LEADERBOARD: Bold nguyên dòng top */
-  .table { width: 100%; border-collapse: separate; border-spacing: 0 6px; }
-  .row { display: grid; grid-template-columns: 35px 1.5fr 0.8fr 0.8fr 0.7fr; padding: 10px 8px; align-items: center; background: #fff; border-radius: 10px; font-size: 13px; border: 1px solid #f2f2f2; color: #555; }
-  .row.header-row { background: none; border: none; font-weight: 700; color: #bbb; font-size: 10px; text-transform: uppercase; }
-  
-  .row.top-rank { 
-    background: #fffdf2; 
-    border-color: var(--accent); 
-    font-weight: 700; 
-    color: var(--primary); 
-  }
-  
-  .crown-col { text-align: center; font-size: 16px; }
-  .email-col { text-align: left; }
-  .contrib { font-size: 11px; color: #aaa; font-weight: 400; }
-</style>
-</head>
-<body>
-
-<div class="container">
-  <div class="header">
-    <h1>SPRING CONTEST</h1>
-    <p>24 Mar to 24 Jun (23:59 GMT)</p>
-    <div id="level-tag" class="level-badge">LEVEL ...</div>
-  </div>
-
-  <div class="content">
-    <div id="target-area">
-      <div class="circle">
-         <span class="reward-label">Next Reward</span>
-         <span class="units">1,000 Points</span>
-         <span class="reward-val">$200</span>
-      </div>
-    </div>
-
-    <div class="stats-grid" id="team-stats">
-      <div class="stat-box"><small>Units</small><span>...</span></div>
-      <div class="stat-box"><small>Points</small><span>...</span></div>
-      <div class="stat-box"><small>Days Left</small><span>...</span></div>
-    </div>
-
-    <div class="progress-wrapper">
-      <div class="progress-container">
-        <div class="progress-bar" id="progress-bar">
-          <span class="progress-bar-text" id="progress-val">0%</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="table">
-      <div class="row header-row">
-        <div></div>
-        <div style="text-align:left">Participant</div>
-        <div>Units</div>
-        <div>Points</div>
-        <div>%</div>
-      </div>
-      <div id="table-body"></div>
-    </div>
-  </div>
-</div>
+<!-- ... (giữ nguyên phần Style bên trên) ... -->
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1dAEb1EpadQgZY1WQgGJdbgqJLnA8oOZY78jKYNU-pF0uQ/exec?sheet=Team1";
+// 1. Sửa Team1 thành team1 (theo đúng ảnh chụp màn hình Sheets của bạn)
+const apiUrl = "https://script.google.com/macros/s/AKfycbynbUNjQvYahFZ7kFAuelON1dAEb1EpadQgZY1WQgGJdbgqJLnA8oOZY78jKYNU-pF0uQ/exec?sheet=team1";
+
 const LEVELS = [
   { p: 1000, r: "$200" }, { p: 2000, r: "$500" }, { p: 5000, r: "$1,500" },
   { p: 10000, r: "$3,500" }, { p: 25000, r: "$10,000" }, { p: 50000, r: "$25,000" }, { p: 150000, r: "$100,000" }
@@ -129,11 +19,18 @@ function loadData() {
   const cb = "jsonp_cb_" + Date.now();
   window[cb] = data => render(data);
   const s = document.createElement("script");
-  s.src = `${apiUrl}?callback=${cb}`;
+  // 2. FIX: Dùng dấu & thay vì dấu ? vì apiUrl đã có tham số rồi
+  s.src = `${apiUrl}&callback=${cb}`; 
   document.body.appendChild(s);
 }
 
 function render(data) {
+  // Thêm kiểm tra lỗi để debug nếu cần
+  if (data.error) {
+    console.error("Dữ liệu lỗi:", data.error);
+    return;
+  }
+
   const users = data.users || [];
   const totalP = +data.totalPoints || 0;
   const totalU = +data.totalUnits || 0;
@@ -175,8 +72,8 @@ function render(data) {
     <div class="row ${i === 0 && u.points > 0 ? 'top-rank' : ''}">
       <div class="crown-col">${i === 0 && u.points > 0 ? '👑' : ''}</div>
       <div class="email-col">${maskEmail(u.email)}</div>
-      <div>${u.units || 0}</div>
-      <div>${u.points || 0}</div>
+      <div>${(u.units || 0).toLocaleString()}</div>
+      <div>${(u.points || 0).toLocaleString()}</div>
       <div class="contrib">${totalP > 0 ? ((u.points/totalP)*100).toFixed(1) : 0}%</div>
     </div>
   `).join("");
@@ -184,5 +81,4 @@ function render(data) {
 
 loadData();
 </script>
-</body>
-</html>
+<!-- ... -->
