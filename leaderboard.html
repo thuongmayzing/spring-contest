@@ -1,13 +1,14 @@
 <script>
 const apiUrl = "https://script.google.com/macros/s/AKfycbyFczo1QUyXLDPLeui9xp9qhen4tMc2Ba-7ZCifCC0gLHrfjIQ4YZdQshTofEKsSzTUkA/exec";
 
-// 🔐 EMAIL DÙNG ĐỂ LOGIN (PHẢI NẰM TRONG WHITELIST)
+// 🔐 EMAIL WHITELIST
 const ACCESS_EMAIL = "xngbusiness@gmail.com";
 
 let currentUserId = "";
 
 const LEVELS = [
-  { points: 1000 }, { points: 2000 }, { points: 5000 }, { points: 10000 }, { points: 25000 }, { points: 50000 }, { points: 150000 }
+  { points: 1000 }, { points: 2000 }, { points: 5000 },
+  { points: 10000 }, { points: 25000 }, { points: 50000 }, { points: 150000 }
 ];
 
 function maskEmail(email){
@@ -26,7 +27,7 @@ function getLevel(points) {
 
 function start(){
   const userId = document.getElementById("userIdInput").value.trim();
-  if(!userId) return alert("Enter userID or email");
+  if(!userId) return alert("Enter userID");
 
   currentUserId = userId;
 
@@ -37,7 +38,7 @@ function start(){
 }
 
 function loadLeaderboard(){
-  // 🔥 GỬI EMAIL (CHÍNH) + ID (PHỤ)
+  // ✅ GỌI API ĐÚNG FORMAT MỚI
   const url = `${apiUrl}?email=${encodeURIComponent(ACCESS_EMAIL)}&id=${encodeURIComponent(currentUserId)}&callback=handleData`;
 
   const script = document.createElement("script");
@@ -54,10 +55,9 @@ window.handleData = function(data){
 }
 
 function renderLeaderboard(data){
-  const leaderboard = data.leaderboard || data.users || [];
+  const leaderboard = data.leaderboard || [];
 
   let html = leaderboard.map(u => {
-    // 🔥 match theo BOTH: userId + email
     const isMe = (
       u.userId === currentUserId ||
       u.email === currentUserId ||
@@ -74,8 +74,7 @@ function renderLeaderboard(data){
     `;
   }).join("");
 
-  // 🔥 fallback nếu user không nằm trong top list
-  if (data.rank && !leaderboard.some(u => u.email === ACCESS_EMAIL)) {
+  if(!leaderboard.some(u => u.email === ACCESS_EMAIL) && data.rank){
     html += `
       <div style="text-align:center; color:#ccc; margin: 10px 0; font-size:12px;">•••</div>
       <div class="row me">
