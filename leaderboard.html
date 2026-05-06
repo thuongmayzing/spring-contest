@@ -13,6 +13,7 @@
     --bg: #f7f8fc;
     --text-muted: #999;
   }
+  
   body { 
     font-family: 'Montserrat', sans-serif; 
     margin: 0; 
@@ -22,6 +23,7 @@
     align-items: center;
     min-height: 100vh; 
   }
+  
   .container { 
     max-width: 480px; 
     width: 92%; 
@@ -40,13 +42,38 @@
     gap: 15px; 
     text-align: center; 
   }
-  .login-box h2 { color: var(--primary); margin: 0 0 10px; font-weight: 800; font-size: 26px; text-transform: uppercase; }
-  .login-box input { padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 85%; font-size: 15px; }
-  .login-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 15px; font-weight: 700; cursor: pointer; width: 92%; }
 
-  .header { background: var(--primary); color: white; text-align: center; padding: 45px 20px 35px; }
-  .header .contest-name { font-size: 14px; opacity: 0.8; text-transform: uppercase; }
-  .header h1 { margin: 0; font-size: 32px; font-weight: 800; }
+  .login-box h2 { 
+    color: var(--primary); 
+    margin: 0 0 10px; 
+    font-weight: 800; 
+    font-size: 26px; 
+    text-transform: uppercase; 
+  }
+
+  .login-box input { 
+    padding: 15px; 
+    border-radius: 12px; 
+    border: 1px solid #ddd; 
+    width: 85%; 
+  }
+
+  .login-box button { 
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    border-radius: 12px; 
+    padding: 15px; 
+    width: 92%;
+    cursor: pointer;
+  }
+
+  .header { 
+    background: var(--primary); 
+    color: white; 
+    text-align: center; 
+    padding: 45px 20px 35px; 
+  }
 
   .content { padding: 30px 12px; }
 
@@ -57,7 +84,6 @@
     font-size: 10px; 
     font-weight: 800; 
     color: var(--text-muted); 
-    text-transform: uppercase;
   }
 
   .list-container { display: flex; flex-direction: column; gap: 10px; }
@@ -67,27 +93,27 @@
     grid-template-columns: 45px 1.2fr 60px 80px; 
     padding: 18px 15px; 
     align-items: center; 
+    background: #fff; 
     border-radius: 16px; 
-    border: 1px solid #f2f2f2;
+    font-size: 13px; 
+    border: 1px solid #f2f2f2; 
   }
 
   .row.top1 { background: #fffdf2; border-color: var(--accent); }
   .row.me { background: #eff2ff; border-style: dashed; }
 
   .rank-col { text-align: center; font-weight: 800; }
-  .name-col { overflow: hidden; text-overflow: ellipsis; }
-  .level-col { text-align: center; color: #2ecc71; }
-  .points-col { text-align: right; font-weight: 700; color: var(--primary); }
+  .points-col { text-align: right; font-weight: 700; }
 
   #list-wrapper { display: none; }
-  .loading { text-align: center; padding: 40px; color: var(--text-muted); }
+  .loading { text-align:center; padding:20px; color:#999; }
 </style>
 </head>
+
 <body>
 
 <div class="container">
   <div class="login-box" id="login">
-    <span style="font-size:40px;">🏆</span>
     <h2>Leaderboard</h2>
     <input type="text" id="userIdInput" placeholder="Enter your userID">
     <button onclick="start()">View Rankings</button>
@@ -95,7 +121,6 @@
 
   <div id="list-wrapper">
     <div class="header">
-      <span class="contest-name">Spring Contest</span>
       <h1>LEADERBOARD</h1>
     </div>
 
@@ -103,10 +128,11 @@
       <div class="table-header">
         <div>Rank</div>
         <div>Participant</div>
-        <div style="text-align:center">Level</div>
-        <div style="text-align:right">Points</div>
+        <div>Level</div>
+        <div>Points</div>
       </div>
-      <div class="list-container" id="list">
+
+      <div id="list" class="list-container">
         <div class="loading">Loading...</div>
       </div>
     </div>
@@ -134,10 +160,10 @@ function getLevel(p){
 }
 
 function start(){
-  const id = document.getElementById("userIdInput").value.trim();
-  if(!id) return alert("Enter userID");
+  const userId = document.getElementById("userIdInput").value.trim();
+  if(!userId) return alert("Enter userID");
 
-  currentUserId = id;
+  currentUserId = userId;
   document.getElementById("login").style.display = "none";
   document.getElementById("list-wrapper").style.display = "block";
 
@@ -162,25 +188,44 @@ window.handleData = function(data){
 }
 
 function renderLeaderboard(data){
-  const list = document.getElementById("list");
   const users = data.leaderboard || [];
+  const list = document.getElementById("list");
 
   if(users.length === 0){
     list.innerHTML = `<div class="loading">No data</div>`;
     return;
   }
 
-  let html = users.map(u=>{
+  const top3 = users.slice(0,3);
+  const me = users.find(u => u.userId === currentUserId);
+
+  let html = "";
+
+  // TOP 3
+  html += top3.map(u=>{
     const isMe = u.userId === currentUserId;
     return `
-      <div class="row ${isMe ? 'me' : ''} ${u.rank===1?'top1':''}">
+      <div class="row ${isMe?'me':''} ${u.rank===1?'top1':''}">
         <div class="rank-col">${u.rank===1?'👑':'#'+u.rank}</div>
-        <div class="name-col">${isMe?'YOU':maskEmail(u.email)}</div>
-        <div class="level-col">${getLevel(u.points)}</div>
+        <div>${isMe?'YOU':maskEmail(u.email)}</div>
+        <div>${getLevel(u.points)}</div>
         <div class="points-col">${u.points.toLocaleString()}</div>
       </div>
     `;
   }).join("");
+
+  // YOU (nếu không trong top 3)
+  if(me && !top3.some(u => u.userId === me.userId)){
+    html += `
+      <div style="text-align:center; color:#ccc; margin:10px 0;">•••</div>
+      <div class="row me">
+        <div class="rank-col">#${me.rank}</div>
+        <div>YOU</div>
+        <div>${getLevel(me.points)}</div>
+        <div class="points-col">${me.points.toLocaleString()}</div>
+      </div>
+    `;
+  }
 
   list.innerHTML = html;
 }
