@@ -1,132 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leaderboard - Spring Contest 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --primary: #1e2447;
-    --accent: #f4c542;
-    --bg: #f7f8fc;
-    --text-muted: #999;
-  }
-  
-  /* Căn giữa toàn bộ nội dung trong body */
-  body { 
-    font-family: 'Montserrat', sans-serif; 
-    margin: 0; 
-    background: var(--bg); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; /* Căn giữa dọc */
-    min-height: 100vh; 
-  }
-  
-  .container { 
-    max-width: 480px; 
-    width: 92%; 
-    background: white; 
-    border-radius: 24px; 
-    overflow: hidden; 
-    box-shadow: 0 12px 40px rgba(0,0,0,0.08); 
-  }
-
-  /* LOGIN BOX: Căn giữa giống index chính */
-  .login-box { 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 80px 20px; 
-    gap: 15px; 
-    text-align: center; 
-  }
-  .login-box h2 { color: var(--primary); margin: 0 0 10px; font-weight: 800; font-size: 26px; text-transform: uppercase; letter-spacing: 1px; }
-  .login-box input { padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 85%; font-family: inherit; font-size: 15px; outline: none; }
-  .login-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 15px 30px; font-weight: 700; cursor: pointer; width: 92%; font-size: 16px; transition: 0.3s; }
-  .login-box button:hover { background: #2a3363; transform: translateY(-2px); }
-
-  /* HEADER: Spring Contest phía trên, LEADERBOARD phía dưới */
-  .header { background: var(--primary); color: white; text-align: center; padding: 45px 20px 35px; }
-  .header .contest-name { font-size: 14px; font-weight: 600; opacity: 0.8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
-  .header h1 { margin: 0; font-size: 32px; letter-spacing: 3px; font-weight: 800; text-transform: uppercase; color: #fff; }
-
-  .content { padding: 30px 12px; }
-
-  /* TABLE UI: 4 cột thoáng đãng */
-  .table-header { 
-    display: grid; 
-    grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 0 15px 12px; 
-    font-size: 10px; 
-    font-weight: 800; 
-    color: var(--text-muted); 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-  }
-  
-  .list-container { display: flex; flex-direction: column; gap: 10px; }
-  
-  .row { 
-    display: grid; 
-    grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 18px 15px; 
-    align-items: center; 
-    background: #fff; 
-    border-radius: 16px; 
-    font-size: 13px; 
-    border: 1px solid #f2f2f2; 
-    color: #444;
-  }
-
-  .row.top1 { background: #fffdf2; border-color: var(--accent); font-weight: 700; box-shadow: 0 4px 15px rgba(244, 197, 66, 0.12); }
-  .row.me { background: #eff2ff; border-color: #3d4da0; border-style: dashed; font-weight: 800; }
-
-  .rank-col { font-weight: 800; text-align: center; }
-  .name-col { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .level-col { text-align: center; font-weight: 700; color: #2ecc71; font-size: 12px; }
-  .points-col { font-weight: 700; text-align: right; color: var(--primary); font-size: 14px; }
-
-  #list-wrapper { display: none; width: 100%; }
-  .loading { text-align: center; padding: 40px; color: var(--text-muted); font-weight: 600; }
-</style>
-</head>
-<body>
-
-<div class="container">
-  <div class="login-box" id="login">
-    <span style="font-size: 40px; margin-bottom: 10px;">🏆</span>
-    <h2>Leaderboard</h2>
-    <input type="text" id="userIdInput" placeholder="Enter your userID">
-    <button onclick="start()">View Rankings</button>
-  </div>
-
-  <div id="list-wrapper">
-    <div class="header">
-      <span class="contest-name">Spring Contest</span>
-      <h1>LEADERBOARD</h1>
-    </div>
-
-    <div class="content">
-      <div class="table-header">
-        <div>Rank</div>
-        <div>Participant</div>
-        <div style="text-align:center">Level</div>
-        <div style="text-align:right">Points</div>
-      </div>
-      
-      <div class="list-container" id="list">
-        <div class="loading">Loading rankings...</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbzAxLNImv5gHZEDrH5uMo-p7doRlJrmee3dfT-bBP_6K3w8N4zRAF-GyI-OsE17ST1pKA/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbyFczo1QUyXLDPLeui9xp9qhen4tMc2Ba-7ZCifCC0gLHrfjIQ4YZdQshTofEKsSzTUkA/exec";
+
+// 🔐 EMAIL DÙNG ĐỂ LOGIN (PHẢI NẰM TRONG WHITELIST)
+const ACCESS_EMAIL = "xngbusiness@gmail.com";
+
 let currentUserId = "";
 
 const LEVELS = [
@@ -149,16 +26,20 @@ function getLevel(points) {
 
 function start(){
   const userId = document.getElementById("userIdInput").value.trim();
-  if(!userId) return alert("Enter userID");
+  if(!userId) return alert("Enter userID or email");
 
   currentUserId = userId;
+
   document.getElementById("login").style.display = "none";
   document.getElementById("list-wrapper").style.display = "block";
+
   loadLeaderboard();
 }
 
 function loadLeaderboard(){
-  const url = apiUrl + "?userId=" + encodeURIComponent(currentUserId) + "&callback=handleData";
+  // 🔥 GỬI EMAIL (CHÍNH) + ID (PHỤ)
+  const url = `${apiUrl}?email=${encodeURIComponent(ACCESS_EMAIL)}&id=${encodeURIComponent(currentUserId)}&callback=handleData`;
+
   const script = document.createElement("script");
   script.src = url;
   document.body.appendChild(script);
@@ -173,33 +54,39 @@ window.handleData = function(data){
 }
 
 function renderLeaderboard(data){
-  const leaderboard = data.leaderboard || [];
-  
+  const leaderboard = data.leaderboard || data.users || [];
+
   let html = leaderboard.map(u => {
-    const isMe = u.userId === currentUserId;
+    // 🔥 match theo BOTH: userId + email
+    const isMe = (
+      u.userId === currentUserId ||
+      u.email === currentUserId ||
+      u.email === ACCESS_EMAIL
+    );
+
     return `
       <div class="row ${isMe ? 'me' : ''} ${u.rank === 1 ? 'top1' : ''}">
         <div class="rank-col">${u.rank === 1 ? '👑' : '#' + u.rank}</div>
         <div class="name-col">${isMe ? "YOU" : maskEmail(u.email)}</div>
         <div class="level-col">${getLevel(u.points)}</div>
-        <div class="points-col">${u.points.toLocaleString()}</div>
+        <div class="points-col">${(u.points || 0).toLocaleString()}</div>
       </div>
     `;
   }).join("");
 
-  if(!leaderboard.some(u => u.userId === currentUserId) && data.currentUser){
+  // 🔥 fallback nếu user không nằm trong top list
+  if (data.rank && !leaderboard.some(u => u.email === ACCESS_EMAIL)) {
     html += `
       <div style="text-align:center; color:#ccc; margin: 10px 0; font-size:12px;">•••</div>
       <div class="row me">
-        <div class="rank-col">#${data.currentUser.rank}</div>
+        <div class="rank-col">#${data.rank}</div>
         <div class="name-col">YOU</div>
-        <div class="level-col">${getLevel(data.currentUser.points)}</div>
-        <div class="points-col">${data.currentUser.points.toLocaleString()}</div>
+        <div class="level-col">${getLevel(data.points)}</div>
+        <div class="points-col">${(data.points || 0).toLocaleString()}</div>
       </div>
     `;
   }
+
   document.getElementById("list").innerHTML = html;
 }
 </script>
-</body>
-</html>
