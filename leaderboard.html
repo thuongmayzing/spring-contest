@@ -7,227 +7,247 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  :root {
-    --primary: #1e2447;
-    --accent: #f4c542;
-    --bg: #f7f8fc;
-    --text-muted: #999;
-  }
+:root {
+  --primary: #1e2447;
+  --accent: #f4c542;
+  --bg: #f7f8fc;
+  --text-muted: #999;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 480px;
+  width: 92%;
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+/* LOGIN */
+.login-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px;
+  gap: 15px;
+}
+
+.login-box h2 {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.login-box input {
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  width: 85%;
+}
+
+.login-box button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  width: 92%;
+  cursor: pointer;
+}
+
+/* HEADER */
+.header {
+  background: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+/* TABLE */
+.content { padding: 20px; }
+
+.table-header, .row {
+  display: grid;
+  grid-template-columns: 45px 1.2fr 60px 80px;
+  align-items: center;
+}
+
+.table-header {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+/* ROW */
+.row {
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+  background: #fff;
   
-  body { 
-    font-family: 'Montserrat', sans-serif; 
-    margin: 0; 
-    background: var(--bg); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    min-height: 100vh; 
+  /* animation */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.row:nth-child(1){ animation-delay: 0.05s }
+.row:nth-child(2){ animation-delay: 0.1s }
+.row:nth-child(3){ animation-delay: 0.15s }
+.row:nth-child(4){ animation-delay: 0.2s }
+
+/* TOP 1 */
+.row.top1 {
+  background: #fffdf2;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 12px rgba(244,197,66,0.4);
+}
+
+/* YOU */
+.row.me {
+  background: linear-gradient(135deg, #eef2ff, #dfe6ff);
+  border: 2px dashed #4c5bd4;
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(76,91,212,0.2);
+}
+
+/* ALIGN */
+.rank-col { justify-self: center; font-weight: 800; }
+.name-col { justify-self: start; }
+.level-col { justify-self: center; color: #2ecc71; font-weight: 700; }
+.points-col { justify-self: end; font-weight: 700; }
+
+/* ANIMATION */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .container { 
-    max-width: 480px; 
-    width: 92%; 
-    background: white; 
-    border-radius: 24px; 
-    overflow: hidden; 
-    box-shadow: 0 12px 40px rgba(0,0,0,0.08); 
-  }
+}
 
-  .login-box { 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 80px 20px; 
-    gap: 15px; 
-    text-align: center; 
-  }
-
-  .login-box h2 { 
-    color: var(--primary); 
-    margin: 0 0 10px; 
-    font-weight: 800; 
-    font-size: 26px; 
-    text-transform: uppercase; 
-  }
-
-  .login-box input { 
-    padding: 15px; 
-    border-radius: 12px; 
-    border: 1px solid #ddd; 
-    width: 85%; 
-  }
-
-  .login-box button { 
-    background: var(--primary); 
-    color: white; 
-    border: none; 
-    border-radius: 12px; 
-    padding: 15px; 
-    width: 92%;
-    cursor: pointer;
-  }
-
-  .header { 
-    background: var(--primary); 
-    color: white; 
-    text-align: center; 
-    padding: 45px 20px 35px; 
-  }
-
-  .content { padding: 30px 12px; }
-
-  .table-header { 
-    display: grid; 
-    grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 0 15px 12px; 
-    font-size: 10px; 
-    font-weight: 800; 
-    color: var(--text-muted); 
-  }
-
-  .list-container { display: flex; flex-direction: column; gap: 10px; }
-
-  .row { 
-    display: grid; 
-    grid-template-columns: 45px 1.2fr 60px 80px; 
-    padding: 18px 15px; 
-    align-items: center; 
-    background: #fff; 
-    border-radius: 16px; 
-    font-size: 13px; 
-    border: 1px solid #f2f2f2; 
-  }
-
-  .row.top1 { background: #fffdf2; border-color: var(--accent); }
-  .row.me { background: #eff2ff; border-style: dashed; }
-
-  .rank-col { text-align: center; font-weight: 800; }
-  .points-col { text-align: right; font-weight: 700; }
-
-  #list-wrapper { display: none; }
-  .loading { text-align:center; padding:20px; color:#999; }
+#list-wrapper { display:none }
 </style>
 </head>
 
 <body>
 
 <div class="container">
-  <div class="login-box" id="login">
-    <h2>Leaderboard</h2>
-    <input type="text" id="userIdInput" placeholder="Enter your userID">
-    <button onclick="start()">View Rankings</button>
-  </div>
 
-  <div id="list-wrapper">
-    <div class="header">
-      <h1>LEADERBOARD</h1>
-    </div>
+<div class="login-box" id="login">
+  <h2>Leaderboard</h2>
+  <input id="userIdInput" placeholder="Enter your userID">
+  <button onclick="start()">View</button>
+</div>
 
-    <div class="content">
-      <div class="table-header">
-        <div>Rank</div>
-        <div>Participant</div>
-        <div>Level</div>
-        <div>Points</div>
-      </div>
+<div id="list-wrapper">
 
-      <div id="list" class="list-container">
-        <div class="loading">Loading...</div>
-      </div>
-    </div>
-  </div>
+<div class="header">
+  <h1>LEADERBOARD</h1>
+</div>
+
+<div class="content">
+
+<div class="table-header">
+  <div>Rank</div>
+  <div>Participant</div>
+  <div>Level</div>
+  <div>Points</div>
+</div>
+
+<div id="list"></div>
+
+</div>
+</div>
 </div>
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbwQHZlinas13xJ3LgIDsvcYyff5DE9FJo2YodUxZxwHT5oPfoo-a-KgIvjnloTyBhu7cw/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbyFczo1QUyXLDPLeui9xp9qhen4tMc2Ba-7ZCifCC0gLHrfjIQ4YZdQshTofEKsSzTUkA/exec";
 
-// ✅ EMAIL AUTH
 const ACCESS_EMAIL = "xngbusiness@gmail.com";
-
 let currentUserId = "";
 
-const LEVELS = [1000,2000,5000,10000,25000,50000,150000];
-
-function maskEmail(email){
-  if(!email) return "";
-  const [n,d] = email.split("@");
-  return n.slice(0,2) + "***@" + d;
-}
-
-function getLevel(p){
-  return LEVELS.filter(x => p >= x).length;
-}
-
 function start(){
-  const userId = document.getElementById("userIdInput").value.trim();
-  if(!userId) return alert("Enter userID");
-
-  currentUserId = userId;
-  document.getElementById("login").style.display = "none";
-  document.getElementById("list-wrapper").style.display = "block";
-
-  loadLeaderboard();
+  const val = document.getElementById("userIdInput").value.trim();
+  if(!val) return alert("Enter ID");
+  
+  currentUserId = val;
+  document.getElementById("login").style.display="none";
+  document.getElementById("list-wrapper").style.display="block";
+  load();
 }
 
-function loadLeaderboard(){
-  const url = `${apiUrl}?email=${encodeURIComponent(ACCESS_EMAIL)}&userId=${encodeURIComponent(currentUserId)}&callback=handleData`;
-
-  const script = document.createElement("script");
-  script.src = url;
-  document.body.appendChild(script);
+function load(){
+  const url = `${apiUrl}?email=${ACCESS_EMAIL}&id=${currentUserId}&callback=handle`;
+  const s = document.createElement("script");
+  s.src = url;
+  document.body.appendChild(s);
 }
 
-window.handleData = function(data){
-  if(!data || data.error){
-    document.getElementById("list").innerHTML =
-      `<div style="color:red;text-align:center;">${data?.error || "API error"}</div>`;
-    return;
-  }
-  renderLeaderboard(data);
-}
-
-function renderLeaderboard(data){
-  const users = data.leaderboard || [];
-  const list = document.getElementById("list");
-
-  if(users.length === 0){
-    list.innerHTML = `<div class="loading">No data</div>`;
+window.handle = function(data){
+  if(data.error){
+    document.getElementById("list").innerHTML = data.error;
     return;
   }
 
-  const top3 = users.slice(0,3);
-  const me = users.find(u => u.userId === currentUserId);
-
-  let html = "";
-
-  // TOP 3
-  html += top3.map(u=>{
-    const isMe = u.userId === currentUserId;
+  const list = data.leaderboard;
+  
+  let html = list.slice(0,3).map(u=>{
+    const me = u.userId === currentUserId;
     return `
-      <div class="row ${isMe?'me':''} ${u.rank===1?'top1':''}">
-        <div class="rank-col">${u.rank===1?'👑':'#'+u.rank}</div>
-        <div>${isMe?'YOU':maskEmail(u.email)}</div>
-        <div>${getLevel(u.points)}</div>
-        <div class="points-col">${u.points.toLocaleString()}</div>
-      </div>
-    `;
+    <div class="row ${u.rank==1?'top1':''} ${me?'me':''}">
+      <div class="rank-col">${u.rank==1?'👑':'#'+u.rank}</div>
+      <div class="name-col">${me?'YOU':mask(u.email)}</div>
+      <div class="level-col">${level(u.points)}</div>
+      <div class="points-col">${u.points.toLocaleString()}</div>
+    </div>`;
   }).join("");
 
-  // YOU (nếu không trong top 3)
-  if(me && !top3.some(u => u.userId === me.userId)){
+  const me = data.currentUser;
+
+  if(me){
     html += `
-      <div style="text-align:center; color:#ccc; margin:10px 0;">•••</div>
-      <div class="row me">
-        <div class="rank-col">#${me.rank}</div>
-        <div>YOU</div>
-        <div>${getLevel(me.points)}</div>
-        <div class="points-col">${me.points.toLocaleString()}</div>
-      </div>
-    `;
+    <div style="text-align:center;color:#bbb;margin:10px;">•••</div>
+    <div class="row me">
+      <div class="rank-col">#${me.rank}</div>
+      <div class="name-col">YOU</div>
+      <div class="level-col">${level(me.points)}</div>
+      <div class="points-col">${me.points.toLocaleString()}</div>
+    </div>`;
   }
 
-  list.innerHTML = html;
+  document.getElementById("list").innerHTML = html;
+}
+
+function mask(e){
+  const [n,d]=e.split("@");
+  return n.slice(0,2)+"***@"+d;
+}
+
+function level(p){
+  if(p>=150000) return 7;
+  if(p>=50000) return 6;
+  if(p>=25000) return 5;
+  if(p>=10000) return 4;
+  if(p>=5000) return 3;
+  if(p>=2000) return 2;
+  if(p>=1000) return 1;
+  return 0;
 }
 </script>
 
