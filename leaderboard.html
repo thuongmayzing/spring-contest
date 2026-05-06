@@ -106,6 +106,7 @@
   .points-col { text-align: right; font-weight: 700; }
 
   #list-wrapper { display: none; }
+  .loading { text-align:center; padding:20px; color:#999; }
 </style>
 </head>
 
@@ -131,15 +132,17 @@
         <div>Points</div>
       </div>
 
-      <div id="list" class="list-container"></div>
+      <div id="list" class="list-container">
+        <div class="loading">Loading...</div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbxwagtl9ixLLROzldcbOHtP1-0qPR5trQq6Pa6oPpAzZZ838u7RZMA8ugp9DnG2ivo90g/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbxwagtl9ixLLROzldcbOHtP1-0qPR5trQq6Pa6oPpAzZ838uRZMA8ugp9DnG2ivo90g/exec";
 
-// ✅ EMAIL FIX
+// ✅ EMAIL WHITELIST PASS
 const ACCESS_EMAIL = "xngbusiness@gmail.com";
 
 let currentUserId = "";
@@ -173,24 +176,33 @@ function start(){
 }
 
 function loadLeaderboard(){
-  const url = `${apiUrl}?email=${encodeURIComponent(ACCESS_EMAIL)}&id=${encodeURIComponent(currentUserId)}&callback=handleData`;
+  const url = `${apiUrl}?email=${encodeURIComponent(ACCESS_EMAIL)}&id=${encodeURIComponent(currentUserId)}`;
 
-  const script = document.createElement("script");
-  script.src = url;
-  document.body.appendChild(script);
-}
-
-window.handleData = function(data){
-  if(data.error){
-    document.getElementById("list").innerHTML =
-      `<div style="color:red;text-align:center;">${data.error}</div>`;
-    return;
-  }
-  renderLeaderboard(data);
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      if(data.error){
+        document.getElementById("list").innerHTML =
+          `<div style="color:red;text-align:center;">${data.error}</div>`;
+        return;
+      }
+      renderLeaderboard(data);
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById("list").innerHTML =
+        `<div style="color:red;text-align:center;">API ERROR</div>`;
+    });
 }
 
 function renderLeaderboard(data){
   const leaderboard = data.leaderboard || [];
+
+  if(leaderboard.length === 0){
+    document.getElementById("list").innerHTML =
+      `<div class="loading">No data</div>`;
+    return;
+  }
 
   let html = leaderboard.map(u => {
     const isMe = u.userId === currentUserId;
