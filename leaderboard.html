@@ -77,23 +77,25 @@ body {
 /* CONTENT */
 .content { padding: 28px 16px; }
 
-/* GRID */
+/* GRID (FIX CHÍNH) */
 .table-header, .row {
   display: grid;
   grid-template-columns: 48px 1fr 70px 90px;
   align-items: center;
+  column-gap: 10px;   /* 👈 FIX ALIGNMENT */
 }
 
-/* HEADER TEXT */
+/* HEADER */
 .table-header {
   font-size: 12px;
   font-weight: 700;
   color: #888;
-  padding: 0 12px 18px;
+  padding: 0 14px 18px;
   letter-spacing: 1.2px;
   text-transform: uppercase;
 }
 
+/* HEADER ALIGN */
 .table-header div:nth-child(1) { text-align: center; }
 .table-header div:nth-child(3) { text-align: center; }
 .table-header div:nth-child(4) { text-align: right; }
@@ -137,11 +139,9 @@ body {
   font-size: 15px;
 }
 
-/* 👇 FIX CHÍNH Ở ĐÂY */
 .name-col { 
   justify-self: start; 
   font-weight: 600;
-  padding-left: 22px;   /* đẩy ra rõ ràng */
   font-size: 14px;
 }
 
@@ -237,7 +237,6 @@ window.handleData = function(data){
   const list = data.leaderboard || [];
   const me = list.find(u => u.userId === currentUserId);
 
-  // 🔥 TOP 5
   let html = list.slice(0,5).map(u => {
     const isMe = u.userId === currentUserId;
 
@@ -250,7 +249,6 @@ window.handleData = function(data){
     </div>`;
   }).join("");
 
-  // nếu YOU không nằm trong top 5
   if(me && !list.slice(0,5).some(u => u.userId === currentUserId)){
     html += `
     <div class="divider">•••</div>
