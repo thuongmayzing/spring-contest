@@ -14,72 +14,42 @@
   --text-muted: #999;
 }
 
-body {
-  font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  background: var(--bg);
-  display: flex;
-  justify-content: center;
+body { 
+  font-family: 'Montserrat', sans-serif; 
+  margin: 0; 
+  background: var(--bg); 
+  display: flex; 
+  justify-content: center; 
   align-items: center;
-  min-height: 100vh;
+  min-height: 100vh; 
 }
 
-.container {
-  max-width: 480px;
-  width: 92%;
-  background: white;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+.container { 
+  max-width: 480px; 
+  width: 92%; 
+  background: white; 
+  border-radius: 24px; 
+  overflow: hidden; 
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08); 
 }
 
-/* LOGIN */
-.login-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 80px 20px;
-  gap: 15px;
+.login-box { 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  padding: 80px 20px; 
+  gap: 15px; 
+  text-align: center; 
 }
+.login-box h2 { color: var(--primary); font-weight: 800; }
+.login-box input { padding: 15px; border-radius: 12px; border: 1px solid #ddd; width: 85%; }
+.login-box button { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 15px; width: 92%; }
 
-.login-box h2 {
-  color: var(--primary);
-  font-weight: 800;
-}
+.header { background: var(--primary); color: white; text-align: center; padding: 45px 20px 35px; }
+.header h1 { margin: 0; font-size: 32px; }
 
-.login-box input {
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  width: 85%;
-}
-
-.login-box button {
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 15px;
-  width: 92%;
-  cursor: pointer;
-}
-
-/* HEADER */
-.header {
-  background: var(--primary);
-  color: white;
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 28px;
-}
-
-/* TABLE */
-.content { padding: 20px; }
+.content { padding: 30px 12px; }
 
 .table-header, .row {
   display: grid;
@@ -88,60 +58,38 @@ body {
 }
 
 .table-header {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
-  margin-bottom: 10px;
+  padding: 0 15px 12px;
 }
 
-/* ROW */
 .row {
-  padding: 16px;
+  padding: 18px 15px;
   border-radius: 16px;
-  border: 1px solid #eee;
+  border: 1px solid #f2f2f2;
   margin-bottom: 10px;
   background: #fff;
-  
-  /* animation */
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fadeIn 0.5s ease forwards;
 }
 
-.row:nth-child(1){ animation-delay: 0.05s }
-.row:nth-child(2){ animation-delay: 0.1s }
-.row:nth-child(3){ animation-delay: 0.15s }
-.row:nth-child(4){ animation-delay: 0.2s }
-
-/* TOP 1 */
 .row.top1 {
   background: #fffdf2;
-  border: 2px solid var(--accent);
-  box-shadow: 0 0 12px rgba(244,197,66,0.4);
+  border-color: var(--accent);
+  box-shadow: 0 4px 15px rgba(244,197,66,0.12);
 }
 
-/* YOU */
 .row.me {
-  background: linear-gradient(135deg, #eef2ff, #dfe6ff);
-  border: 2px dashed #4c5bd4;
-  transform: scale(1.02);
-  box-shadow: 0 6px 20px rgba(76,91,212,0.2);
+  background: #eff2ff;
+  border: 2px dashed #3d4da0;
+  font-weight: 800;
 }
 
-/* ALIGN */
 .rank-col { justify-self: center; font-weight: 800; }
 .name-col { justify-self: start; }
 .level-col { justify-self: center; color: #2ecc71; font-weight: 700; }
 .points-col { justify-self: end; font-weight: 700; }
 
-/* ANIMATION */
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-#list-wrapper { display:none }
+#list-wrapper { display: none; }
+.loading { text-align:center; padding:40px; color:#999; }
 </style>
 </head>
 
@@ -151,82 +99,87 @@ body {
 
 <div class="login-box" id="login">
   <h2>Leaderboard</h2>
-  <input id="userIdInput" placeholder="Enter your userID">
-  <button onclick="start()">View</button>
+  <input type="text" id="userIdInput" placeholder="Enter your userID">
+  <button onclick="start()">View Rankings</button>
 </div>
 
 <div id="list-wrapper">
+  <div class="header">
+    <h1>LEADERBOARD</h1>
+  </div>
 
-<div class="header">
-  <h1>LEADERBOARD</h1>
+  <div class="content">
+
+    <div class="table-header">
+      <div>Rank</div>
+      <div>Participant</div>
+      <div style="text-align:center">Level</div>
+      <div style="text-align:right">Points</div>
+    </div>
+
+    <div id="list">
+      <div class="loading">Loading...</div>
+    </div>
+
+  </div>
 </div>
 
-<div class="content">
-
-<div class="table-header">
-  <div>Rank</div>
-  <div>Participant</div>
-  <div>Level</div>
-  <div>Points</div>
-</div>
-
-<div id="list"></div>
-
-</div>
-</div>
 </div>
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbyFczo1QUyXLDPLeui9xp9qhen4tMc2Ba-7ZCifCC0gLHrfjIQ4YZdQshTofEKsSzTUkA/exec";
+const apiUrl = "https://script.google.com/macros/s/AKfycbwQHZlinas13xJ3LgIDsvcYyff5DE9FJo2YodUxZxwHT5oPfoo-a-KgIvjnloTyBhu7cw/exec";
 
 const ACCESS_EMAIL = "xngbusiness@gmail.com";
 let currentUserId = "";
 
 function start(){
-  const val = document.getElementById("userIdInput").value.trim();
-  if(!val) return alert("Enter ID");
-  
-  currentUserId = val;
-  document.getElementById("login").style.display="none";
-  document.getElementById("list-wrapper").style.display="block";
-  load();
+  const userId = document.getElementById("userIdInput").value.trim();
+  if(!userId) return alert("Enter userID");
+
+  currentUserId = userId;
+  document.getElementById("login").style.display = "none";
+  document.getElementById("list-wrapper").style.display = "block";
+  loadLeaderboard();
 }
 
-function load(){
-  const url = `${apiUrl}?email=${ACCESS_EMAIL}&id=${currentUserId}&callback=handle`;
-  const s = document.createElement("script");
-  s.src = url;
-  document.body.appendChild(s);
+function loadLeaderboard(){
+  const url = `${apiUrl}?email=${encodeURIComponent(ACCESS_EMAIL)}&callback=handleData`;
+  const script = document.createElement("script");
+  script.src = url;
+  document.body.appendChild(script);
 }
 
-window.handle = function(data){
+window.handleData = function(data){
   if(data.error){
-    document.getElementById("list").innerHTML = data.error;
+    document.getElementById("list").innerHTML = `<div style="color:red;text-align:center">${data.error}</div>`;
     return;
   }
 
-  const list = data.leaderboard;
-  
-  let html = list.slice(0,3).map(u=>{
-    const me = u.userId === currentUserId;
+  const list = data.leaderboard || [];
+
+  // tìm YOU
+  const me = list.find(u => u.userId === currentUserId);
+
+  let html = list.slice(0,3).map(u => {
+    const isMe = u.userId === currentUserId;
+
     return `
-    <div class="row ${u.rank==1?'top1':''} ${me?'me':''}">
+    <div class="row ${u.rank==1?'top1':''} ${isMe?'me':''}">
       <div class="rank-col">${u.rank==1?'👑':'#'+u.rank}</div>
-      <div class="name-col">${me?'YOU':mask(u.email)}</div>
-      <div class="level-col">${level(u.points)}</div>
+      <div class="name-col">${isMe ? "YOU" : maskEmail(u.email)}</div>
+      <div class="level-col">${getLevel(u.points)}</div>
       <div class="points-col">${u.points.toLocaleString()}</div>
     </div>`;
   }).join("");
 
-  const me = data.currentUser;
-
-  if(me){
+  // nếu YOU không nằm trong top 3 → show riêng
+  if(me && !list.slice(0,3).some(u => u.userId === currentUserId)){
     html += `
-    <div style="text-align:center;color:#bbb;margin:10px;">•••</div>
+    <div style="text-align:center;color:#ccc;margin:10px;">•••</div>
     <div class="row me">
       <div class="rank-col">#${me.rank}</div>
       <div class="name-col">YOU</div>
-      <div class="level-col">${level(me.points)}</div>
+      <div class="level-col">${getLevel(me.points)}</div>
       <div class="points-col">${me.points.toLocaleString()}</div>
     </div>`;
   }
@@ -234,19 +187,20 @@ window.handle = function(data){
   document.getElementById("list").innerHTML = html;
 }
 
-function mask(e){
-  const [n,d]=e.split("@");
-  return n.slice(0,2)+"***@"+d;
+function maskEmail(email){
+  if(!email) return "";
+  const [n,d] = email.split("@");
+  return n.slice(0,2) + "***@" + d;
 }
 
-function level(p){
-  if(p>=150000) return 7;
-  if(p>=50000) return 6;
-  if(p>=25000) return 5;
-  if(p>=10000) return 4;
-  if(p>=5000) return 3;
-  if(p>=2000) return 2;
-  if(p>=1000) return 1;
+function getLevel(points){
+  if(points>=150000) return 7;
+  if(points>=50000) return 6;
+  if(points>=25000) return 5;
+  if(points>=10000) return 4;
+  if(points>=5000) return 3;
+  if(points>=2000) return 2;
+  if(points>=1000) return 1;
   return 0;
 }
 </script>
